@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="User">
+    <resultMap type="UserVO" id="UserMap">  
+		<result column="user_id" property="user_id"/>
+		<result column="email" property="email"/>
+		<result column="password" property="password"/>
+		<result column="name" property="name"/>
+		<result column="is_admin" property="is_admin"/>
+		<result column="created" property="created"/>
+		<result column="updated" property="updated"/>
+	</resultMap>
+	<select id="selectUserinfo" resultType="UserVO">
+		SELECT
+			user_id,
+			email,
+			password,
+			name,
+			created,
+			updated
+		FROM
+			users_user
+		WHERE
+			user_id=#{user_id}
+	
+	</select>
+	
+	<update id="updateUserinfo">
+		UPDATE users_user
+		SET
+			name=#{name},
+			updated=#{updated}
+		WHERE
+			user_id=#{user_id}
+	</update>
+	<update id="updatesetPassword" parameterType="UserVO">
+		UPDATE users_user
+		SET
+			password=#{password},
+			updated=#{updated}
+		WHERE
+			user_id=#{user_id}
+			
+	
+	</update>
+</mapper>

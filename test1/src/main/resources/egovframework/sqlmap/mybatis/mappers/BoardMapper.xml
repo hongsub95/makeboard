@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Board">
+	<resultMap type="BoardVO" id="BoardMap">  
+		<result column="id" property="id"/>
+		<result column="title" property="title"/>
+		<result column="content" property="content"/>
+		<result column="user_id" property="user_id"/>
+		<result column="created" property="created"/>
+		<result column="updated" property="updated"/>
+		
+	</resultMap>
+	
+	<select id="totalpage" resultType="int">
+	
+	SELECT
+		COUNT(*)
+	FROM 
+		boards_board
+	
+	</select>
+	
+	<select id="boardlist" parameterType="PagingVO" resultType="BoardVO">
+		SELECT 
+			board.id, 
+			board.title,
+			board.content,
+			board.created,
+			board.updated,
+			user.user_id,
+			user.name as user_name
+			
+		FROM
+			boards_board as board
+		LEFT JOIN
+			users_user as user
+		ON
+			board.user_id = user.user_id
+		ORDER BY 
+			board.id
+		LIMIT #{perPage} OFFSET #{limitStart}
+	</select>
+  	
+  	<select id="selectboard" resultType="BoardVO">
+		SELECT 
+			board.id,
+			board.title,
+			board.content,
+			user.user_id,
+			board.created,
+			board.updated,
+			user.name as user_name
+		FROM
+			boards_board as board
+		join
+			users_user as user
+		on
+			user.user_id = board.user_id
+		WHERE 
+			id = #{id}	
+	</select>
+	
+	<insert id="insertboard" parameterType="BoardVO">
+		INSERT INTO boards_board
+			(id,title,content,created,user_id)
+		VALUES
+			(#{id},#{title},#{content},#{created},#{user_id}) 
+	</insert>
+	
+	<update id="updateboard">
+		UPDATE boards_board
+		SET
+			title=#{title},
+			content=#{content},
+			updated=#{updated}
+		WHERE
+			id=#{id}
+	</update>
+	
+	<delete id="deleteboard">
+		DELETE FROM boards_board
+		WHERE id=#{id}
+	
+	</delete>
+</mapper>
