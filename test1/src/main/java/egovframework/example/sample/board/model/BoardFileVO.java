@@ -1,5 +1,7 @@
 package egovframework.example.sample.board.model;
 
+import java.util.Date;
+
 public class BoardFileVO {
 	
 	private Long board_id;
@@ -8,6 +10,8 @@ public class BoardFileVO {
 	private Long file_id;
 	private String fileSize;
 	private String fileExtension;
+	private Date created;
+	private Date updated;
 	
 	
 	public String getFileExtension() {
@@ -47,6 +51,18 @@ public class BoardFileVO {
 	}
 	public void setOriginalFileName(String originalFileName) {
 		this.originalFileName = originalFileName;
+	}
+	public Date getCreated() {
+		return created;
+	}
+	public void setCreated(Date created) {
+		this.created = created;
+	}
+	public Date getUpdated() {
+		return updated;
+	}
+	public void setUpdated(Date updated) {
+		this.updated = updated;
 	}
 	
 	

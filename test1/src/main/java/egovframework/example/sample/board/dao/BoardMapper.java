@@ -32,4 +32,6 @@ public interface BoardMapper {
 	public List<BoardVO> selectMyPostBoard(Map<String,Object> map);
 	
 	public int selectPagemyTotal(Long user_id);
+	
+	public void insertFile(Map<String,Object> list);
 }
