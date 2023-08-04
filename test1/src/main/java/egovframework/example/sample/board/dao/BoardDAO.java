@@ -2,6 +2,7 @@ package egovframework.example.sample.board.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class BoardDAO implements BoardMapper{
 	// 게시물 생성(post)
 	@Override
 	public void insertBoard(BoardVO vo) {
+		
 		sqlsession.insert("Board.insertboard",vo);
 		
 	}
@@ -52,4 +54,18 @@ public class BoardDAO implements BoardMapper{
 		return sqlsession.selectOne("Board.totalpage");
 	}
 	
+	@Override
+	public List<BoardVO> selectMyPostBoard(Map<String,Object> map) {
+		return sqlsession.selectList("Board.selectMyPostBoard",map);
+	}
+	
+	@Override
+	public int selectPagemyTotal(Long user_id) {
+		return sqlsession.selectOne("Board.mytotalpage",user_id);
+	}
+	
+	@Override
+	public void insertFile(Map<String,Object> list) {
+		
+	}
 }

@@ -67,9 +67,13 @@ public class PagingVO {
 	}
 	
 	public void calExistPreOrNext(int nowPage) {
-		if(nowPage == 1) {
+		if(nowPage == 1 && nowPage != getTotalPage()) {
 			setExistPrePage(false);
 			setExistNextPage(true);
+		}
+		else if (nowPage==1 && nowPage == getTotalPage()){
+			setExistPrePage(false);
+			setExistNextPage(false);
 		}
 		else if(nowPage == getTotalPage()) {
 			setExistNextPage(false);

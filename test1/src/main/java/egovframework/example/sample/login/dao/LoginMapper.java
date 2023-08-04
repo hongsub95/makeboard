@@ -4,10 +4,14 @@ import egovframework.example.sample.user.model.UserVO;
 
 public interface LoginMapper {
 	
-	public String selectHasEmail(UserVO vo);
+
 	
 	public void insertUser(UserVO vo);
 	
+	public void insertOauthUser(UserVO vo);
+	
 	public UserVO selectUserForemail(String email);
+	
+	public String selectLoginMethod(UserVO vo);
 	
 }

@@ -6,27 +6,27 @@
 		<result column="email" property="email"/>
 		<result column="password" property="password"/>
 		<result column="name" property="name"/>
-		<result column="is_admin" property="is_admin"/>
+		<result column="loginMethod" property="loginMethod"/>
+		<result column="isAdmin" property="isAdmin"/>
 		<result column="created" property="created"/>
 		<result column="updated" property="updated"/>
 	</resultMap>
-	<select id="has_email" resultType="string">
 	
-		SELECT
-			COUNT(*)
-		FROM 
-			users_user
-		WHERE
-			email = #{email}
-		
-	</select>
-	
-	<insert id="inser_user" parameterType="UserVO">
+	<insert id="insertUser" parameterType="UserVO">
 	
 		INSERT INTO users_user
-		(user_id,email,password,name,is_admin,created)
+		(user_id,email,password,name,isAdmin,created,loginMethod)
 		VALUES
-		(#{user_id},#{email},#{password},#{name},#{is_admin},#{created})
+		(#{user_id},#{email},#{password},#{name},#{isAdmin},#{created},#{loginMethod})
+	
+	</insert>
+	
+	<insert id="insertKakaoUser" parameterType="UserVO">
+	
+		INSERT INTO users_user
+		(user_id,email,name,loginMethod,isAdmin,created)
+		VALUES
+		(#{user_id},#{email},#{name},#{loginMethod},#{isAdmin},#{created})
 	
 	</insert>
 	
@@ -55,5 +55,16 @@
 		WHERE
 			email = #{email}
 		
+	</select>
+	
+	<select id="selectLoginMethod" resultType="string">
+	
+	SELECT
+		loginMethod
+	FROM 
+		users_user
+	WHERE
+		email = #{email}
+	
 	</select>
 </mapper>

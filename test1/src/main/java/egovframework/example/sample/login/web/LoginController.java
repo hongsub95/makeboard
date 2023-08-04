@@ -1,5 +1,9 @@
 package egovframework.example.sample.login.web;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -11,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import egovframework.example.sample.login.service.impl.LoginServiceimpl;
 import egovframework.example.sample.user.model.UserVO;
@@ -28,17 +34,40 @@ public class LoginController {
 	}
 	
 	@PostMapping("/SignupForm.do")
-	public String SignupForm(UserVO vo) {
-		boolean pwdLength = loginserviceimpl.lengthPwd(vo.getPassword());
-		boolean has_email = loginserviceimpl.has_email(vo);
+	public ModelAndView SignupForm(UserVO vo) {
 		
-		if (pwdLength && has_email ) {
+		ModelAndView mav = new ModelAndView();
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		mav.setView(jsonView);
+		boolean pwdLength = loginserviceimpl.lengthPwd(vo.getPassword());
+		UserVO has_email = loginserviceimpl.findByemail(vo.getEmail());
+		Map<String,String> message = new HashMap<String,String>();
+		
+		if (pwdLength && has_email == null ) {
+			
 			loginserviceimpl.pwdEncoding(vo);
-			return "redirect:/home.do";
+			mav.addObject("msg", "success");
+			
+			return mav;
 			
 		}
+		else if (has_email != null) {
+			
+			mav.addObject("msg", "already");
+			
+			return mav;
+		}
+		
+		else if(pwdLength == false) {
+			mav.addObject("msg", "minPasswordlength");
+			
+			return mav;
+		}
+		
 		else {
-			return "sample/failedLogin";
+			mav.addObject("msg","fail");
+			
+			return mav;
 		}
 		
 	}
@@ -48,19 +77,29 @@ public class LoginController {
 		return "sample/choiceSignup";
 	}
 	
+	@GetMapping("/ChoiceLoginForm.do")
+	public String ChoiceLoginForm() {
+		return "sample/choiceLogin";
+	}
+	
 	@GetMapping("/LoginForm.do")
 	public String LoginFormView() {
 		return "sample/LoginForm";
 	}
 	
 	@PostMapping("/LoginForm.do")
-	public String LoginForm(HttpServletRequest request,String email, String password) {
-
+	public ModelAndView LoginForm(HttpServletRequest request,String email, String password) {
+		
+		ModelAndView mav = new ModelAndView();
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		mav.setView(jsonView);
+		
 		UserVO user = loginserviceimpl.findByemail(email);
 		HttpSession session = request.getSession();
 		
 		if (user == null) {
-			return "sample/failedLogin";
+			mav.addObject("msg", "noUser");
+			return mav;
 		}
 		else {
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -71,35 +110,75 @@ public class LoginController {
 				session.setAttribute("email", user.getEmail());
 				session.setAttribute("name", user.getName());
 				session.setAttribute("user_id", user.getUser_id());
-				session.setAttribute("is_admin", user.getIs_admin());
+				session.setAttribute("is_admin", user.getIsAdmin());
 				
-				return"redirect:/home.do";
+				mav.addObject("msg", "success");
+				mav.addObject("name",user.getName());
+				return mav;
+				
 			}
+			mav.addObject("msg","noPassword");
+			return mav;
 			
-			return "sample/failedLogin";
 		}
 			
 	}
-	
-	@GetMapping("/auth/kakao.do")
-	public String kakaoLogin(@RequestParam(value="code") String code) {
-		String a = code;
-		String REST_API_KEY = "&client_id=b5a3afb094585ae6bd3ad90921e1b7c0";
-		String REDIRECT_URI = "&redirect_uri=http://localhost:8080/auth/kakao/callback";
-		String callback_url = "https://kauth.kakao.com/oauth/authorize?response_type=code";
-		
-		
-		return "redirect:"+callback_url+REDIRECT_URI+REST_API_KEY;
-	}
+
 	
 	@RequestMapping(value="/auth/kakao/callback.do",method=RequestMethod.GET)
-	public String kakaoCallback(@RequestParam(value="code") String code) {
-		String AUTHORIZE_CODE = code;
-		/*String REST_API_KEY = "e95cabe4ba5b71792e1b75c513ddc4a8";
-		String REDIRECT_URI = "http://localhost:8080/auth/kakao/callback";
-		String token_request = "https://kauth.kakao.com/oauth/token?grant_type=authorization_";*/
+	public String kakaoCallback(HttpServletRequest request ,@RequestParam(value="code") String code) {
 		
-		return null;
+		String AuthorizeCode = code;
+		String AccessToken = loginserviceimpl.getAccessToken(code);
+		Map<String,Object> kAccount = loginserviceimpl.getUserInfo(AccessToken);
+		
+		String email = (String) kAccount.get("email");
+		@SuppressWarnings("unchecked")
+		Map<String,String> profile = (Map<String, String>) kAccount.get("profile");
+		String name = (String)profile.get("nickname");
+		
+		UserVO user = loginserviceimpl.findByemail(email);
+		
+		// user 정보가 없을 경우
+		if (user==null) {
+			UserVO vo = new UserVO();
+			HttpSession session = request.getSession();
+			vo.setEmail(email);
+			vo.setName(name);
+			vo.setLoginMethod("kakao");
+			vo.setCreated(new Date());
+			loginserviceimpl.SignupOauthUser(vo);
+			session.setAttribute("email", vo.getEmail());
+			session.setAttribute("name", vo.getName());
+			session.setAttribute("user_id", vo.getUser_id());
+			session.setAttribute("is_admin", vo.getIsAdmin());
+			
+			return"redirect:/home.do";
+		}
+			
+		// user 정보가 있을 경우 (즉, 카카오회원가입 방식이 아닌 다른 방식으로 회원가입한 유저인 경우)	
+		else {
+			String loginMethod = loginserviceimpl.findLoginMethod(user);
+			
+			// 다른 로그인 방식으로 
+			if (loginMethod == "email" || loginMethod.equals("email")) {
+				return null;
+			}
+			else if (loginMethod == "kakao" || loginMethod.equals("kakao")) {
+				
+				HttpSession session = request.getSession();
+				session.setAttribute("email", user.getEmail());
+				session.setAttribute("name", user.getName());
+				session.setAttribute("user_id", user.getUser_id());
+				session.setAttribute("is_admin", user.getIsAdmin());
+				return "redirect:/home.do";
+			}
+		}
+		
+		
+		
+		
+		return "redirect:/home.do";
 	}
 	
 	@GetMapping("/Logout.do")

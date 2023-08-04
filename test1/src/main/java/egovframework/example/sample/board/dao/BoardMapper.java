@@ -2,6 +2,7 @@ package egovframework.example.sample.board.dao;
 
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.example.sample.board.model.BoardVO;
 import egovframework.example.sample.board.model.PagingVO;
@@ -27,5 +28,8 @@ public interface BoardMapper {
 	public void deleteBoard(int BoardID);
 	
 	public int selectPageTotal();
-
+	
+	public List<BoardVO> selectMyPostBoard(Map<String,Object> map);
+	
+	public int selectPagemyTotal(Long user_id);
 }

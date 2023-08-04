@@ -5,8 +5,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script>
+
+	$(document).ready(function(){
+		alert("세션기한이 만료되었습니다.");
+		location.href="/home.do";
+	});
+
+</script>
 </head>
 <body>
-	<h1>게시판 글쓰기/수정/삭제 실패</h1>
+	
 </body>
 </html>

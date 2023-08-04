@@ -12,16 +12,17 @@ public class LoginDAO implements LoginMapper{
 	@Autowired
 	private SqlSessionTemplate sqlsession;
 	
-	@Override
-	public String selectHasEmail(UserVO vo) {
-		
-		return sqlsession.selectOne("login.has_email",vo);
-	}
 	
 	@Override
 	public void insertUser(UserVO vo) {
 		
-		sqlsession.insert("login.inser_user",vo);
+		sqlsession.insert("login.insertUser",vo);
+	}
+	
+	@Override
+	public void insertOauthUser(UserVO vo) {
+		
+		sqlsession.insert("login.insertKakaoUser",vo);
 	}
 	
 	@Override
@@ -30,7 +31,10 @@ public class LoginDAO implements LoginMapper{
 		return sqlsession.selectOne("login.selectUserForemail", email);
 	}
 	
-	
+	@Override
+	public String selectLoginMethod(UserVO vo) {
+		return sqlsession.selectOne("login.selectLoginMethod",vo);
+	}
 	
 	
 }

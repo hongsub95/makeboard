@@ -6,7 +6,8 @@
 		<result column="email" property="email"/>
 		<result column="password" property="password"/>
 		<result column="name" property="name"/>
-		<result column="is_admin" property="is_admin"/>
+		<result column="loginMethod" property="loginMethod"/>
+		<result column="isAdmin" property="isAdmin"/>
 		<result column="created" property="created"/>
 		<result column="updated" property="updated"/>
 	</resultMap>
@@ -17,7 +18,8 @@
 			password,
 			name,
 			created,
-			updated
+			updated,
+			loginMethod
 		FROM
 			users_user
 		WHERE

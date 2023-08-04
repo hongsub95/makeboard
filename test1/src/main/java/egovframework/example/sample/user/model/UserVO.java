@@ -8,9 +8,10 @@ public class UserVO {
 	private String email;
 	private String password;
 	private String name;
+	private String loginMethod;
 	private Date created;
 	private Date updated;
-	private boolean is_admin;
+	private boolean isAdmin;
 	
 
 	
@@ -30,6 +31,10 @@ public class UserVO {
 		return name;
 	}
 	
+	public String getLoginMethod() {
+		return loginMethod;
+	}
+	
 	public Date getCreated() {
 		return created;
 	}
@@ -38,8 +43,8 @@ public class UserVO {
 		return updated;
 	}
 	
-	public boolean getIs_admin() {
-		return is_admin;
+	public boolean getIsAdmin() {
+		return isAdmin;
 	}
 	
 	public void setUser_id(Long user_id) {
@@ -58,6 +63,10 @@ public class UserVO {
 		this.name=name;
 	}
 	
+	public void setLoginMethod(String loginMethod) {
+		this.loginMethod = loginMethod;
+	}
+	
 	public void setCreated(Date created) {
 		this.created = created;
 	}
@@ -66,7 +75,7 @@ public class UserVO {
 		this.updated =updated;
 	}
 	
-	public void setIs_admin(boolean is_admin) {
-		this.is_admin = is_admin;
+	public void setIsAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 }

@@ -2,6 +2,7 @@ package egovframework.example.sample.board.web;
 
 import java.util.List;
 
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -11,6 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import egovframework.example.sample.board.model.BoardVO;
 import egovframework.example.sample.board.model.PagingVO;
@@ -23,6 +27,12 @@ public class BoardController {
 	@Autowired
 	private BoardServiceimpl boardservice;
 	
+	private PagingVO getPaging(HttpServletRequest request,int total) {
+		int nowPage = Integer.parseInt(request.getParameter("page"));
+		PagingVO pagingvo = new PagingVO(total,nowPage,10);
+		return pagingvo;
+	}
+	
 
 	@RequestMapping("/home.do")
 	public String homePage() {
@@ -32,8 +42,7 @@ public class BoardController {
 	@RequestMapping("/BoardList.do")
 	public String boardListView(Model model,HttpServletRequest request) {
 		int total = boardservice.getPageTotal();
-		int nowPage = Integer.parseInt(request.getParameter("page"));
-		PagingVO pagingvo = new PagingVO(total,nowPage,10);
+		PagingVO pagingvo = getPaging(request,total);
 		List<BoardVO> boardlist = boardservice.findall(pagingvo);
 		
 		model.addAttribute("boardlist",boardlist);
@@ -51,21 +60,36 @@ public class BoardController {
 	}
 	
 	@PostMapping("/BoardForm.do")
-	public String addBoard(BoardVO vo,HttpServletRequest request) {
+	public ModelAndView addBoard(BoardVO vo,HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		String email = (String) session.getAttribute("email");
 		Long user_id = (Long) session.getAttribute("user_id");
 		String name = (String) session.getAttribute("name");
-		
+		String title = vo.getTitle();
+		String content = vo.getContent();
+		ModelAndView mav = new ModelAndView();
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		mav.setView(jsonView);
 		vo.setUser_id(user_id);
 		vo.setUser_name(name);
 		if(email == null) {
-			return "sample/failedboard";
+			mav.addObject("msg","sessionExpired");
+			return mav;
+		}
+
+		else if (title.length()<5) {
+			mav.addObject("msg","shortTitle");
+			return mav;
+		}
+		else if (content.length()<5) {
+			mav.addObject("msg","shortContent");
+			return mav;
 		}
 		else {
 			
 			boardservice.canPost(vo,email);
-			return "redirect:/home.do";
+			mav.addObject("msg", "success");
+			return mav;
 		}
 	
 	}
@@ -80,12 +104,30 @@ public class BoardController {
 	public String boardUpdateView(BoardVO vo) {
 		
 		boardservice.canUpdate(vo);
-		return "redirect:/home.do";
+		return "redirect:/BoardList.do?page=1";
 	}
 	
 	@RequestMapping("/boarddelete.do")
 	public String boardDeleteView(int id) {
 		boardservice.canDelete(id);
-		return "redirect:/home.do";
+		return "redirect:/BoardList.do?page=1";
 	}
+	
+	@RequestMapping("/myPostBoard.do")
+	public String MyBoardView(Long user_id,Model model,HttpServletRequest request) {
+		int total = boardservice.getPagemyTotal(user_id);
+		PagingVO pagingvo = getPaging(request,total);
+		
+		model.addAttribute("myboard",boardservice.canMyBoardSelect(user_id,pagingvo));
+		model.addAttribute("pages", pagingvo);
+		return "sample/myPostBoard";
+	}
+	
+	@RequestMapping("/postFile.do")
+	public void WriteFile(BoardVO vo,MultipartHttpServletRequest mpRequest) throws Exception{
+		
+		boardservice.postFile(vo, mpRequest);
+	}
+	
+	
 }

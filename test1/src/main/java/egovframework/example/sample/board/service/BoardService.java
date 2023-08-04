@@ -2,6 +2,9 @@ package egovframework.example.sample.board.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import egovframework.example.sample.board.model.BoardVO;
 import egovframework.example.sample.board.model.PagingVO;
 
@@ -22,6 +25,12 @@ public interface BoardService {
 	
 	public BoardVO canSelect(int BoardID);
 	
+	public List<BoardVO> canMyBoardSelect(Long user_id,PagingVO pagingvo);
+	
 	public int getPageTotal();
+	
+	public int getPagemyTotal(Long user_id);
+	
+	public void postFile(BoardVO vo, MultipartHttpServletRequest mpRequest) throws Exception;
 	
 }

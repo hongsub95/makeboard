@@ -6,11 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<script>
-	$(document).ready(function(){
-		
-	});
-</script>
 </head>
 <body>
 <div class="all_board_list">
@@ -25,7 +20,7 @@
 				<th>작성일</th>
 			</tr>
 		</thead>
-		<c:forEach var="row" items="${boardlist}" varStatus="status">
+		<c:forEach var="row" items="${myboard}" varStatus="status">
 			<tbody>
 				<tr>
 				 	<td>${pages.total- ((pages.nowPage -1) * pages.perPage) - status.index }</td>
@@ -68,16 +63,16 @@
    	</div>
    	<div class="page_btn" style="display:flex; justify-content:center; margin-top:30px; ">
    		<c:if test="${pages.existPrePage}">
-   			<a style="font-size:large;" href="BoardList.do?page=${pages.nowPage - 1}">Previous</a>
+   			<a style="font-size:large;" href="myPostBoard.do?user_id=${user_id}&page=${pages.nowPage - 1}">Previous</a>
    		</c:if>
    		<c:forEach var="num" begin="${pages.startPage}" end="${pages.endPage}">
    			
-   			<a style="margin-left:10px;font-size:large;" href="BoardList.do?page=${num}">${num}</a>
+   			<a style="margin-left:10px;font-size:large;" href="myPostBoard.do?user_id=${user_id}&page=${num}">${num}</a>
    		</c:forEach>
    		<c:if test="${pages.existNextPage}">
-   			<a style="margin-left:10px;font-size:large;" href="BoardList.do?page=${pages.nowPage + 1}">Next</a>
+   			<a style="margin-left:10px;font-size:large;" href="myPostBoard.do?user_id=${user_id}&page=${pages.nowPage + 1}">Next</a>
    		</c:if>
    	</div>
-</div> 	
+</div>
 </body>
 </html>
