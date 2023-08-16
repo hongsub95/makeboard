@@ -3,7 +3,7 @@
 <configuration>
 	<!--mapper에서 매칭할 parmeter Type 별칭 설정-->
 	<typeAliases>
-		<typeAlias alias="BoardVO" type="egovframework.example.sample.service.BoardVO"/>
+		<typeAlias alias="BoardVO" type="egovframework.example.sample.board.model.BoardVO"/>
 	</typeAliases>
 	
 	

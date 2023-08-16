@@ -1,6 +1,5 @@
 package egovframework.example.sample.board.dao;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +7,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import egovframework.example.sample.board.model.BoardFileVO;
 import egovframework.example.sample.board.model.BoardVO;
+import egovframework.example.sample.board.model.HeartVO;
 import egovframework.example.sample.board.model.PagingVO;
 
 
@@ -22,7 +23,7 @@ public class BoardDAO implements BoardMapper{
 	@Override
 	public List<BoardVO> BoardList(PagingVO pagingvo){
 		
-		return sqlsession.selectList("Board.boardlist",pagingvo);
+		return sqlsession.selectList("Board.boardlistOrderCreated",pagingvo);
 	}
 	
 	// 게시물 생성(post)
@@ -64,8 +65,76 @@ public class BoardDAO implements BoardMapper{
 		return sqlsession.selectOne("Board.mytotalpage",user_id);
 	}
 	
+	
 	@Override
-	public void insertFile(Map<String,Object> list) {
+	public void insertFile(BoardFileVO fileVO) {
+		sqlsession.insert("Board.insertFile",fileVO);
+	}
+	
+	@Override
+	public List<BoardFileVO> selectFiles(int board_id){
+		return sqlsession.selectList("BoardFile.fileselect",board_id);
+	}
+	
+	@Override 
+	public Map<String,Object> fileDownload(Map<String,Object> map){
+		return sqlsession.selectOne("BoardFile.filedownload",map);
+	}
+	
+	@Override
+	public void updateFile(BoardFileVO fileVO) {
+		sqlsession.update("BoardFile.updatefile",fileVO);
+	}
+	
+	@Override
+	public void deleteAllFile(int board_id) {
+		sqlsession.delete("BoardFile.deleteAllfile",board_id);
+	}
+	
+	@Override
+	public void deleteFile(int file_id) {
+		sqlsession.delete("BoardFile.deletefile",file_id);
+	}
+	
+	@Override
+	public int selectAllHeart(int board_id) {
+		return sqlsession.selectOne("Heart.countAllHeart",board_id);
+	}
+	
+	@Override
+	public int selectUserId(Map<String, Integer> map ) {
+		return sqlsession.selectOne("Heart.checkIsUser",map);
+	}
+	
+	@Override
+	public void insertHeart(Map<String,Integer> map) {
+		sqlsession.insert("Heart.insertHeart",map);
+	}
+	
+	@Override
+	public void deleteHeart(Map<String,Integer> IdMap) {
 		
+		sqlsession.delete("Heart.deleteHeart",IdMap);
+	}
+	
+	@Override
+	public List<BoardVO> BoardListByHeart(PagingVO pagingvo){
+		return sqlsession.selectList("Board.boardlistOrderHeart",pagingvo);
+	}
+	
+	@Override
+	public List<HeartVO> selectAllHeart(){
+		return sqlsession.selectList("Heart.selectAllHeart");
+	}
+	
+	@Override
+	public List<BoardVO> selectSearchWord(Map<String, Object> map){
+		
+		return sqlsession.selectList("Board.selectSearchword",map);
+	}
+	
+	@Override
+	public int selectSearchwordPage(Map<String, Object> map) {
+		return sqlsession.selectOne("Board.selectSearchwordpage",map);
 	}
 }

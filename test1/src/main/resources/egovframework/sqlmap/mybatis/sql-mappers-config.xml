@@ -4,6 +4,8 @@
 	<!--mapper에서 매칭할 parmeter Type 별칭 설정-->
 	<typeAliases>
 		<typeAlias alias="BoardVO" type="egovframework.example.sample.board.model.BoardVO"/>
+		<typeAlias alias="BoardFileVO" type="egovframework.example.sample.board.model.BoardFileVO"/>
+		<typeAlias alias="HeartVO" type="egovframework.example.sample.board.model.HeartVO"/>
 		<typeAlias alias="PagingVO" type="egovframework.example.sample.board.model.PagingVO"/>
 		<typeAlias alias="UserVO" type="egovframework.example.sample.user.model.UserVO"/>
 	</typeAliases>

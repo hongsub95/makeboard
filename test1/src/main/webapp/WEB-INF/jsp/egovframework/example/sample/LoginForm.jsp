@@ -18,7 +18,7 @@
 				},
 				type:"POST",
 				success:function(result){
-					console.log(result.msg);
+					
 					if(result.msg == "success"){
 						alert(result.name+"님 환영합니다.");
 						location.href="/home.do";
@@ -64,7 +64,7 @@
 		</div>
 	</form>
 	<div style="display:flex; justify-content:center; margin-top:20px;">
-			<button style="width:100px; border-color:black; background-color:white; color:black; margin-left:10px; " class="loginbtn" type="submit"> 로그인  </button> 
+			<button style="cursor:pointer; width:100px; border-color:black; background-color:white; color:black; margin-left:10px; " class="loginbtn" type="submit"> 로그인  </button> 
 	</div>
 </div>
 </body>

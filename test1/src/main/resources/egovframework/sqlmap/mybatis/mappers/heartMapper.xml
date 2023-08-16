@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Heart">
+	<resultMap type="HeartVO" id="HeartMap">  
+		<result column="heart_id" property="heart_id"/>
+		<result column="board_id" property="board_id"/>
+		<result column="user_id" property="user_id"/>
+	</resultMap>
+	
+	<select id="countAllHeart" parameterType="int" resultType="int">
+	SELECT
+		COUNT(*)
+	FROM 
+		hearts_heart
+	WHERE
+		board_id = #{board_id}
+	</select>
+	
+	<select id="checkIsUser" parameterType="int" resultType="int">
+	SELECT 
+		COUNT(*)
+	FROM
+		hearts_heart
+	WHERE
+		user_id = #{user_id} AND board_id = #{board_id}
+	</select>
+	
+	<select id="selectAllHeart" resultType="HeartVO">
+	SELECT 
+		*
+	FROM
+		hearts_heart
+	</select>
+	
+	<insert id="insertHeart" parameterType="int">
+	INSERT INTO hearts_heart
+		(board_id,user_id)
+	VALUES
+		(#{board_id},#{user_id})
+	</insert>
+	
+	<delete id="deleteHeart">
+	DELETE FROM hearts_heart
+	WHERE
+		board_id = #{board_id} AND user_id=#{user_id}
+	
+	
+	
+	</delete>
+</mapper>

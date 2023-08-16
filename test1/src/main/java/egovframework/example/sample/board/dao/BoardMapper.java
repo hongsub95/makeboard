@@ -4,7 +4,9 @@ package egovframework.example.sample.board.dao;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.example.sample.board.model.BoardFileVO;
 import egovframework.example.sample.board.model.BoardVO;
+import egovframework.example.sample.board.model.HeartVO;
 import egovframework.example.sample.board.model.PagingVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
@@ -33,5 +35,31 @@ public interface BoardMapper {
 	
 	public int selectPagemyTotal(Long user_id);
 	
-	public void insertFile(Map<String,Object> list);
+	public void insertFile(BoardFileVO fileVO);
+	
+	public void updateFile(BoardFileVO fileVO);
+	
+	public List<BoardFileVO> selectFiles(int board_id);
+	
+	public Map<String,Object> fileDownload(Map<String,Object> map);
+	
+	public void deleteAllFile(int board_id);
+	
+	public void deleteFile(int file_id);
+	
+	public int selectAllHeart(int board_id);
+	
+	public int selectUserId(Map<String, Integer> map);
+	
+	public void insertHeart(Map<String,Integer> map);
+	
+	public void deleteHeart(Map<String,Integer> IdMap);
+	
+	public List<BoardVO> BoardListByHeart(PagingVO pagingvo);
+	
+	public List<HeartVO> selectAllHeart();
+	
+	public List<BoardVO> selectSearchWord(Map<String, Object> map);
+	
+	public int selectSearchwordPage(Map<String, Object> map);
 }

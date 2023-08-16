@@ -11,6 +11,39 @@
 		
 	</resultMap>
 	
+	<select id="boardlistOrderHeart" parameterType="PagingVO" resultType="BoardVO">
+	SELECT 
+			board.id, 
+			board.title,
+			board.content,
+			board.created,
+			board.updated,
+			user.user_id,
+			user.name as user_name,
+			IFNULL(heart.a,0) AS count
+		FROM
+			boards_board as board
+		LEFT OUTER JOIN
+			(SELECT 
+				Board_id,
+				COUNT(*) AS a
+			FROM
+				hearts_heart 
+			GROUP BY
+				board_id) AS heart
+		ON	
+			board.id = heart.board_id
+		INNER JOIN
+			users_user as user
+		ON
+			board.user_id = user.user_id
+		ORDER BY 
+			count DESC, board.created DESC
+		LIMIT #{perPage} OFFSET #{limitStart}
+	
+	
+	</select>
+	
 	<select id="totalpage" resultType="int">
 	
 	SELECT
@@ -31,7 +64,7 @@
 	
 	</select>
 	
-	<select id="boardlist" parameterType="PagingVO" resultType="BoardVO">
+	<select id="boardlistOrderCreated" parameterType="PagingVO" resultType="BoardVO">
 		SELECT 
 			board.id, 
 			board.title,
@@ -71,11 +104,23 @@
 			id = #{id}	
 	</select>
 	
-	<insert id="insertboard" parameterType="BoardVO">
+	<insert id="insertboard" parameterType="BoardVO" >
+		<selectKey keyProperty="id" keyColumn="id" resultType="Long" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 		INSERT INTO boards_board
 			(id,title,content,created,user_id)
 		VALUES
 			(#{id},#{title},#{content},#{created},#{user_id}) 
+	</insert>
+	
+	<insert id="insertBoardHeart" parameterType="BoardVO">
+	
+	INSERT INTO hearts_heart
+		(heart_id,board_id,user_id)
+	VALUES
+		(#{heart_id},#{board_id},#{user_id})
+	
 	</insert>
 	
 	<update id="updateboard">
@@ -118,4 +163,61 @@
 	
 	
 	</select>
+	
+	
+	<insert id="insertFile" parameterType="hashMap">
+		
+		INSERT INTO files_file
+			(file_id,board_id,ORG_FILE_NAME,STORED_FILE_NAME,FILE_SIZE,FILE_EXTENSION,created)
+		VALUES
+			(#{file_id},#{board_id},#{originalFileName},#{fileName},#{fileSize},#{fileExtension},#{created})
+		
+	</insert>
+	
+	<select id="selectSearchword" parameterType="hashMap" resultType="BoardVO">
+	
+	SELECT
+			board.id, 
+			board.title,
+			board.content,
+			board.created,
+			board.updated,
+			user.user_id,
+			user.name as user_name
+			
+		FROM 
+			boards_board AS board
+		JOIN
+			users_user  AS user
+		ON
+			board.user_id = user.user_id
+		WHERE
+			board.title like CONCAT('%',#{word},'%') 
+			OR 
+			board.content like CONCAT('%',#{word},'%')
+			
+		ORDER BY
+			board.created DESC
+		LIMIT #{pagingvo.perPage} OFFSET #{pagingvo.limitStart}
+		
+	
+	</select>
+	
+	<select id="selectSearchwordpage" parameterType="hashMap" resultType="int">
+	
+	SELECT
+		COUNT(*)
+	FROM 
+		boards_board
+	WHERE
+		title like CONCAT('%',#{word},'%') 
+		OR 
+		content like CONCAT('%',#{word},'%')
+	
+	
+	</select>
+	
+	
+	
+
 </mapper>

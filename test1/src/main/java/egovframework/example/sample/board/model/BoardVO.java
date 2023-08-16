@@ -45,10 +45,6 @@ public class BoardVO {
 		return updated;
 	}
 	
-	public BoardFileVO getFiles() {
-		return files;
-	}
-
 	public void setUser_name(String user_name) {
 		this.user_name =user_name;
 	}
@@ -77,9 +73,5 @@ public class BoardVO {
 		this.updated = updated;
 	}
 
-	public void setFiles(BoardFileVO files) {
-		this.files = files;
-	}
-	
 
 }

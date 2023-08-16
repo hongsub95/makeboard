@@ -8,7 +8,7 @@ public class BoardFileVO {
 	private String originalFileName;
 	private String fileName;
 	private Long file_id;
-	private String fileSize;
+	private Long fileSize;
 	private String fileExtension;
 	private Date created;
 	private Date updated;
@@ -40,10 +40,10 @@ public class BoardFileVO {
 		this.fileName = fileName;
 	}
 	
-	public String getFileSize() {
+	public Long getFileSize() {
 		return fileSize;
 	}
-	public void setFileSize(String fileSize) {
+	public void setFileSize(Long fileSize) {
 		this.fileSize = fileSize;
 	}
 	public String getOriginalFileName() {

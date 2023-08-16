@@ -2,6 +2,7 @@ package egovframework.example.sample.board.web;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import egovframework.example.sample.board.model.BoardFileVO;
 import egovframework.example.sample.board.model.BoardVO;
 
 @Component
@@ -19,24 +21,16 @@ public class FileUtils {
 	
 	private static final String filePath = "C:\\staticfile";
 	
-	public List<Map<String,Object>> parseInsertFileInfo(BoardVO vo, MultipartHttpServletRequest mpRequest) throws Exception {
-		
-		//업로드된 파일 이름목록을 제공하는 생성자
-		Iterator<String> iterator = mpRequest.getFileNames();
+	public List<BoardFileVO> parseInsertFileInfo(BoardVO vo,MultipartFile[] uploadFile) throws Exception {
 		
 		
-		//나중에 db넣을 변수
-		
-		MultipartFile multipartFile = null;
 		// 원본 파일 이름
 		String originalFileName = null;
 		String originalFileExtension = null;
 		String storedFileName = null;
 		
-		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+		List<BoardFileVO> list = new ArrayList<BoardFileVO>();
 		Map<String,Object> listMap = null;
-		
-		Long board_id = vo.getId();
 		
 		File file = new File(filePath);
 		
@@ -45,34 +39,36 @@ public class FileUtils {
 			file.mkdirs();
 		}
 		
-		// 다음 데이터의 유무 확인
-		while(iterator.hasNext()) {
+		for(MultipartFile multipartFile : uploadFile) {
 			
 			// 다음 데이터 반환
-			multipartFile = mpRequest.getFile(iterator.next());
 			
+			BoardFileVO fileVO = new BoardFileVO();
 			if (multipartFile.isEmpty() == false) {
 				originalFileName = multipartFile.getOriginalFilename();
+				
 				// 확장자는 '.'부터 끝까지
 				originalFileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
 				storedFileName = getRandomString() + originalFileExtension;
 				
 				// 저장경로+ 저장될이름의 데이터가 담긴 file
-				file = new File(filePath + storedFileName);
+				file = new File(filePath,storedFileName);
 				
 				// throws exception 해야함
 				// 지정한 경로에 저장될 이름으로 저장
 				multipartFile.transferTo(file);
 				
-				listMap = new HashMap<String,Object>();
-				listMap.put("board_id",board_id);
-				listMap.put("ORG_FILE_NAME", originalFileName);
-				listMap.put("STORED_FILE_NAME", storedFileName);
-				listMap.put("FILE_SIZE", multipartFile.getSize());
-				list.add(listMap);
+				fileVO.setCreated(new Date());
+				fileVO.setOriginalFileName(originalFileName);
+				fileVO.setFileExtension(originalFileExtension);
+				fileVO.setFileName(storedFileName);
+				fileVO.setFileSize(multipartFile.getSize());
+				fileVO.setBoard_id(vo.getId());
+				list.add(fileVO);
 				
 			}
 		}
+		
 		return list;
 	}
 	

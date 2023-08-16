@@ -15,16 +15,22 @@
 			if (result){
 				var title = $(".boardtitle").val();
 				var content = $(".boardcontent").val();
-				
+				var file = $("input[name='file']");
+				var files = file[0].files;
+				var formData = new FormData();
+				formData.append("title",title);
+				formData.append("content",content);
+				for(var i = 0; i<files.length; i++){
+					formData.append("uploadFile",files[i])
+				}
 				$.ajax({
 					url:'<c:url value="/BoardForm.do" />',
-					data:{
-						title:title,
-						content:content
-					},
-					
+					data:formData,
+					processData: false,
+				    contentType: false,
 					type:"POST",
 					success:function(result){
+						console.log(result);
 						if (result.msg == "sessionExpired"){
 							alert("만료된 세션입니다.");
 							location.href='<c:url value="/home.do" />';
@@ -55,19 +61,29 @@
 </script>
 <body>
 <div class="boardDetailForm" style="display:flex; flex-direction:column;" >
-	<form action="" method="post">
-	<table style="width:900px; margin-top:20px; background-color:#bbdefb; ">
-	<tr>
-		<td><input style="width:800px; height:3vh; border-color:black; font-size:large; outline:none; border:none;" type="text" name="title" class="boardtitle"placeholder="제목을 입력해주세요."/></td>
-	</tr>
-	<tr >	 
-		<td><textarea style="resize:none; width:800px; height:60vh; outline:none; border:none; font-size:x-large;" name="content" class="boardcontent" rows="20" cols="50" placeholder="내용을 입력해주세요." ></textarea></td>
-	</tr>
-	</table>
+	<form action="" method="post" enctype="multipart/form-data" >
+		<table style="width:900px; margin-top:20px; background-color:#bbdefb; ">
+		<tr>
+			<td><input style="width:800px; height:3vh; border-color:black; font-size:large; outline:none; border:none;" type="text" name="title" class="boardtitle"placeholder="제목을 입력해주세요."/></td>
+		</tr>
+		<tr >	 
+			<td><textarea style="resize:none; width:800px; height:60vh; outline:none; border:none; font-size:x-large;" name="content" class="boardcontent" rows="20" cols="50" placeholder="내용을 입력해주세요." ></textarea></td>
+		</tr>
+		<tr>
+			<td>
+				<div>
+					<input type="file" name="file" multiple/>	
+				</div>
+			</td>
+		</tr> 
+		</table>
+		<!-- <input type="submit"/>  -->
 	</form>
-	<div style="margin-top:30px; align-items:flex-end;">
-		<button style="width:100px; border-color:black; background-color:white; color:black;" type="submit" class="boardformbtn">등록하기</button>
-	</div>
+	<div style="display:flex; margin-top:30px; align-items:flex-end;">
+		<div style="margin-right:30px;">
+			<button style="width:100px; border-color:black; cursor:pointer; background-color:white; color:black;" type="submit" class="boardformbtn">등록하기</button>
+		</div>
+	</div> 
 </div>
 
 </body>
