@@ -37,6 +37,7 @@
 					success:function(result){
 						
 						alert("수정이 완료되었습니다");
+						location.reload();
 						
 					}
 				});
@@ -51,8 +52,9 @@
 			var result = confirm("삭제하시겠습니까?");
 			if(result){
 				var board_id = $("#id").val();
+				
 				$.ajax({
-					url:'<c:url value="/boarddelete.do" />',
+					url:'<c:url value="/boardsoftdelete.do" />',
 					data:{
 						id:board_id
 					},

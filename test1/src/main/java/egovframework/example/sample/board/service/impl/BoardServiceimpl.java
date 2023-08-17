@@ -130,10 +130,17 @@ public class BoardServiceimpl implements BoardService{
 	}
 	
 	@Override
-	public void DeleteAllFiles(int board_id) {
+	public void DeleteAllFiles(Long board_id) {
 		boarddao.deleteAllFile(board_id);
-	
 	}
+	
+	@Override
+	public void boardSoftdelete(BoardVO vo) {
+		vo.setIsDeleted(true);
+		vo.setDeleted(new Date());
+		boarddao.softdeleteBoard(vo);
+	}
+	
 	@Override
 	public void DeleteFile(int file_id) {
 		boarddao.deleteFile(file_id);

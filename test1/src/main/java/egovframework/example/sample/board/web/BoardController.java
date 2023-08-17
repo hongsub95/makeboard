@@ -51,7 +51,8 @@ public class BoardController {
 		List<BoardVO> boardlist = boardservice.findall(pagingvo);
 		model.addAttribute("boardlist",boardlist);
 		model.addAttribute("pages", pagingvo);
-		return "sample/BoardList";
+		
+		return "sample/board/BoardList";
 	}
 	
 	@RequestMapping("/AsyncBoardListData.do")
@@ -89,9 +90,9 @@ public class BoardController {
 	public String addBoardView(HttpServletRequest request) {
 		HttpSession session = request.getSession(false);
 		if(session == null) {
-			return "sample/failedboard";
+			return "sample/message/failedboard";
 		}
-		return "sample/BoardForm";
+		return "sample/board/BoardForm";
 	}
 	
 	@PostMapping("/BoardForm.do")
@@ -139,7 +140,7 @@ public class BoardController {
 		model.addAttribute("heart",boardservice.findAllHeart(id));
 		
 		
-		return "sample/BoardDetail";
+		return "sample/board/BoardDetail";
 	}
 	
 	@RequestMapping("/boardupdate.do")
@@ -151,14 +152,23 @@ public class BoardController {
 		return "redirect:/BoardList.do?page=1";
 	}
 	
-	@RequestMapping("/boarddelete.do")
-	public String boardDeleteView(int id) {
-		int board_id = id; 
+	@RequestMapping("/boardsoftdelete.do")
+	@ResponseBody
+	public String boardSoftDeleteView(HttpServletRequest request,BoardVO vo) {
+		/*int board_id = id
 		boardservice.DeleteAllFiles(board_id);
-		boardservice.canDelete(id);
+		boardservice.canDelete(id);*/
+		
+		Long board_id = new Long(Integer.parseInt(request.getParameter("id")));
+		vo.setId(board_id);
+		System.out.println(board_id);
+		boardservice.DeleteAllFiles(board_id);
+		boardservice.boardSoftdelete(vo);
 		
 		return "redirect:/BoardList.do?page=1";
 	}
+	
+	
 	
 	@RequestMapping("/myPostBoard.do")
 	public String MyBoardView(Long user_id,Model model,HttpServletRequest request) {
@@ -167,7 +177,7 @@ public class BoardController {
 		
 		model.addAttribute("myboard",boardservice.canMyBoardSelect(user_id,pagingvo));
 		model.addAttribute("pages", pagingvo);
-		return "sample/myPostBoard";
+		return "sample/board/myPostBoard";
 	}
 	
 	@RequestMapping("/fileDownload.do")
@@ -199,7 +209,7 @@ public class BoardController {
 		
 		boardservice.pushHeart(user_id,board_id);
 		
-		return "sample/BoardDetail";
+		return "sample/board/BoardDetail";
 	}
 	
 	@RequestMapping("/heartdelete.do")
@@ -207,7 +217,7 @@ public class BoardController {
 		
 		boardservice.removeHeart(user_id, board_id);
 		
-		return "sample/BoardDetail";
+		return "sample/board/BoardDetail";
 	}
 	
 	@RequestMapping("/checkUserHeart.do")
@@ -234,12 +244,12 @@ public class BoardController {
 		List<BoardVO> boardlist = boardservice.findSearchBoard(pagingvo,word);
 		if (boardlist.isEmpty()) {
 			model.addAttribute("msg","nothing");
-			return "sample/BoardList";
+			return "sample/board/BoardList";
 		}
 		model.addAttribute("boardlist",boardlist);
 		model.addAttribute("pages",pagingvo);
 		
-		return "sample/BoardList";
+		return "sample/board/BoardList";
 	}
 	
 	

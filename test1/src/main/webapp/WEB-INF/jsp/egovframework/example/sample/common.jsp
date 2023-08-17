@@ -61,7 +61,7 @@
 				<a style="text-decoration:none; color:black; font-size:large;" href="BoardForm.do" class="boardpost">게시판글쓰기</a>
 			</c:otherwise>
 		</c:choose>
-		<a style="text-decoration:none; color:black; font-size:large;" href="BoardList.do?page=1" class="boardlist">게시판 목록</a>
+		<a style="text-decoration:none; color:black; font-size:large;" href="BoardList.do?page=1&order=created" class="boardlist">게시판 목록</a>
 	</div>
 	</header>
 	

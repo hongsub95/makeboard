@@ -30,7 +30,7 @@ public class LoginController {
 	
 	@GetMapping("/SignupForm.do")
 	public String SignupFormView(UserVO vo) {
-		return "sample/SignupForm";
+		return "sample/login/SignupForm";
 	}
 	
 	@PostMapping("/SignupForm.do")
@@ -74,17 +74,17 @@ public class LoginController {
 	
 	@GetMapping("/ChoiceSignupForm.do")
 	public String ChoiceSignupForm() {
-		return "sample/choiceSignup";
+		return "sample/login/choiceSignup";
 	}
 	
 	@GetMapping("/ChoiceLoginForm.do")
 	public String ChoiceLoginForm() {
-		return "sample/choiceLogin";
+		return "sample/login/choiceLogin";
 	}
 	
 	@GetMapping("/LoginForm.do")
 	public String LoginFormView() {
-		return "sample/LoginForm";
+		return "sample/login/LoginForm";
 	}
 	
 	@PostMapping("/LoginForm.do")
@@ -111,6 +111,7 @@ public class LoginController {
 				session.setAttribute("name", user.getName());
 				session.setAttribute("user_id", user.getUser_id());
 				session.setAttribute("is_admin", user.getIsAdmin());
+				session.setAttribute("grade", user.getGrade());
 				
 				mav.addObject("msg", "success");
 				mav.addObject("name",user.getName());
@@ -152,6 +153,7 @@ public class LoginController {
 			session.setAttribute("name", vo.getName());
 			session.setAttribute("user_id", vo.getUser_id());
 			session.setAttribute("is_admin", vo.getIsAdmin());
+			session.setAttribute("grade", vo.getGrade());
 			
 			return"redirect:/home.do";
 		}
@@ -171,13 +173,11 @@ public class LoginController {
 				session.setAttribute("name", user.getName());
 				session.setAttribute("user_id", user.getUser_id());
 				session.setAttribute("is_admin", user.getIsAdmin());
+				session.setAttribute("grade", user.getGrade());
 				return "redirect:/home.do";
 			}
 		}
-		
-		
-		
-		
+			
 		return "redirect:/home.do";
 	}
 	
@@ -190,6 +190,7 @@ public class LoginController {
 		        session.removeAttribute("name");
 		        session.removeAttribute("user_id");
 		        session.removeAttribute("is_admin");
+		        session.removeAttribute("grade");
 		    }
 		return "redirect:/home.do";
 	}

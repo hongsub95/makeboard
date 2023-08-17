@@ -31,7 +31,6 @@ public class BoardDAO implements BoardMapper{
 	public void insertBoard(BoardVO vo) {
 		
 		sqlsession.insert("Board.insertboard",vo);
-		
 	}
 	
 	// 게시물 조회 (get)
@@ -48,6 +47,11 @@ public class BoardDAO implements BoardMapper{
 	@Override
 	public void deleteBoard(int BoardID) {
 		sqlsession.delete("Board.deleteboard",BoardID);
+	}
+	
+	@Override
+	public void softdeleteBoard(BoardVO vo) {
+		sqlsession.update("Board.softdeleteboard",vo);
 	}
 	
 	@Override
@@ -87,7 +91,7 @@ public class BoardDAO implements BoardMapper{
 	}
 	
 	@Override
-	public void deleteAllFile(int board_id) {
+	public void deleteAllFile(Long board_id) {
 		sqlsession.delete("BoardFile.deleteAllfile",board_id);
 	}
 	
@@ -137,4 +141,6 @@ public class BoardDAO implements BoardMapper{
 	public int selectSearchwordPage(Map<String, Object> map) {
 		return sqlsession.selectOne("Board.selectSearchwordpage",map);
 	}
+	
+	
 }

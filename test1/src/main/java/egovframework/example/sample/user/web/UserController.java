@@ -30,12 +30,12 @@ public class UserController {
 		HttpSession session = request.getSession(false);
 		Long user_id = (Long) session.getAttribute("user_id");
 		if(user_id == null) {
-			return "sample/failedLogin";
+			return "sample/message/failedLogin";
 		}
 		else {
 			
 			model.addAttribute("user",userserviceimpl.findUserInfo(user_id));
-			return "sample/UserInfo";
+			return "sample/user/UserInfo";
 		}
 		
 	}

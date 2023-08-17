@@ -10,6 +10,9 @@
 		<result column="isAdmin" property="isAdmin"/>
 		<result column="created" property="created"/>
 		<result column="updated" property="updated"/>
+		<result column="deleted" property="deleted"/>
+		<result column="isDeleted" property="isDeleted"/>
+		<result column="grade" property="grade"/>
 	</resultMap>
 	<select id="selectUserinfo" resultType="UserVO">
 		SELECT

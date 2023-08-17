@@ -11,6 +11,9 @@ public class UserVO {
 	private String loginMethod;
 	private Date created;
 	private Date updated;
+	private Date deleted;
+	private boolean isDeleted;
+	private int grade;
 	private boolean isAdmin;
 	
 
@@ -77,5 +80,33 @@ public class UserVO {
 	
 	public void setIsAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+
+	public int getGrade() {
+		return grade;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+
+	public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
+	public Date getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Date deleted) {
+		this.deleted = deleted;
+	}
+
+	public boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 }

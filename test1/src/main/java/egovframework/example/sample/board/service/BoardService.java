@@ -41,7 +41,7 @@ public interface BoardService {
 	
 	public Map<String,Object> getfileInfoForDownload(Map<String, Object> map);
 	
-	public void DeleteAllFiles(int board_id);
+	public void DeleteAllFiles(Long board_id);
 	
 	public void DeleteFile(int file_id);
 	
@@ -60,5 +60,7 @@ public interface BoardService {
 	public List<BoardVO> findSearchBoard(PagingVO pagingvo,String word);
 	
 	public int searchWordPage(BoardVO boardvo,String word);
+	
+	public void boardSoftdelete(BoardVO vo);
 	
 }

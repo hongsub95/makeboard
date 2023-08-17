@@ -11,8 +11,11 @@ public class BoardVO {
 	private String content;
 	private Date created;
 	private Date updated;
+	private Date deleted;
 	private Long user_id;
 	private String user_name;
+	private String deleteReason;
+	private boolean isDeleted;
 	
 
 	
@@ -71,6 +74,34 @@ public class BoardVO {
 	
 	public void setUpdated(Date updated) {
 		this.updated = updated;
+	}
+
+	public Date getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Date deleted) {
+		this.deleted = deleted;
+	}
+
+	public boolean getIsDeleted() {
+		return isDeleted;
+	}
+
+	public void setIsDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
+	}
+
+	public String getDeleteReason() {
+		return deleteReason;
+	}
+
+	public void setDeleteReason(String deleteReason) {
+		this.deleteReason = deleteReason;
+	}
+
+	public void setDeleted(boolean isDeleted) {
+		this.isDeleted = isDeleted;
 	}
 
 

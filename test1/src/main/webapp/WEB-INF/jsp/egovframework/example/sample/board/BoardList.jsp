@@ -16,7 +16,7 @@
 			
 			if (selected == "orderBycreated"){
 				$.ajax({
-					url:'<c:url value="/AsyncBoardListData.do" />',
+					url:'<c:url value="/AsyncBoardListData.do?page=1" />',
 					data:{page:page},		
 					type:"get",
 					success:function(result){
@@ -37,7 +37,7 @@
 			}
 			else if (selected == "orderByheart"){
 				$.ajax({
-					url:'<c:url value="/AsyncBoardListHeartData.do" />',
+					url:'<c:url value="/AsyncBoardListHeartData.do?page=1" />',
 					type:"get",
 					data:{page:page},
 					success:function(result){
@@ -198,7 +198,6 @@
 		var word = $("#search-bar").val();
 		location.href="/SearchBoard.do?page=1&word="+word;
 		
-		
 	}
 		
 	
@@ -207,9 +206,9 @@
 </head>
 <body>
 <div class="all_board_list">
-	
-	<div class="board_list" style="position:relative;">
-	    <table border="1" class="board_list_table" >
+	<input type="hidden" id="searchwordmsg" value="${msg }"/>
+	<div class="board_list" style="position:relative; margin-top:30px;" >
+	    <table border="1"  class="board_list_table" >
 		    <thead class="board_list_thead">
 			    <tr>
 					<th style="width:5%;">NO</th>
@@ -224,7 +223,7 @@
 				<c:forEach var="row" items="${boardlist}" varStatus="status">
 						<tr>
 						 	<td>${pages.total- ((pages.nowPage -1) * pages.perPage) - status.index }</td>
-							<td><a href="BoardDetail.do?id=${row.id}">
+							<td><a style="text-decoration:none;" href="BoardDetail.do?id=${row.id}">
 								<c:choose>
 									<c:when test="${fn:length(row.title)>15}">
 										<c:out value="${fn:substring(row.title,0,14)}"/>
@@ -253,21 +252,23 @@
 			</tbody>
 	    </table>
 	    
-	    <div style="position:absolute; right:280px; bottom:-40px;">
+	    <div style="position:absolute; right:15%; bottom:-40px;">
 			<select style="width:80px; text-align:center; height:2vh; border-radius:1.2em;" id="orderByselect">
 				<option  id="orderBycreated" value="orderBycreated">최신순</option>
 				<option id="orderByheart" value="orderByheart" >인기순</option>
 			</select>
 		</div>
 		
-		<div style="position:absolute; display:flex; bottom:-60px;">
+		<div style="position:absolute; display:flex; bottom:-70px;">
 			
-			<input style="width:500px; height:2vh; border-color:black;" id="search-bar" placeholder="검색어를 입력해주세요."/>
-			<button style="width:100px; border-color:black; cursor:pointer; background-color:white; color:black; border-left:none;" type="button" onClick="SearchBtn();">검색</button>
+			<input style="width:500px; border-color:black;" id="search-bar" placeholder="검색어를 입력해  주세요."/>
+			<button style="width:70px; border-color:black; cursor:pointer; background-color:white; color:black; border-left:none;" type="button" onClick="SearchBtn();">
+				<img style="width:30px;" src="https://cdn-icons-png.flaticon.com/512/71/71403.png"/>
+			</button>
 			
 		</div>
 		
-		<div class="page_btn" style="position:absolute; bottom:-120px;">
+		<div class="page_btn" style="position:absolute; bottom:-130px;">
 			<c:choose>
 				<c:when test="${!empty param.word }">
 			   		<c:if test="${pages.existPrePage}">
@@ -287,18 +288,17 @@
 			   		</c:if>
 			   		<c:forEach var="num" begin="${pages.startPage}" end="${pages.endPage}">
 			   			
-			   			<a style="margin-left:10px;font-size:large;" href="BoardList.do?page=${num}">${num}</a>
+			   			<a style="margin-left:10px; font-size:large;" href="BoardList.do?page=${num}">${num}</a>
 			   		</c:forEach>
 			   		<c:if test="${pages.existNextPage}">
-			   			<a style="margin-left:10px;font-size:large;" href="BoardList.do?page=${pages.nowPage + 1}">Next</a>
+			   			<a style="margin-left:10px; font-size:large;" href="BoardList.do?page=${pages.nowPage + 1}">Next</a>
 			   		</c:if>
 	   			</c:otherwise>
 	   		</c:choose>
+	   		
+	   		
    		</div>
    	</div>
-	   	
-   	
-   	
    	
 </div> 	
 </body>

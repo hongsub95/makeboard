@@ -43,7 +43,7 @@ public interface BoardMapper {
 	
 	public Map<String,Object> fileDownload(Map<String,Object> map);
 	
-	public void deleteAllFile(int board_id);
+	public void deleteAllFile(Long board_id);
 	
 	public void deleteFile(int file_id);
 	
@@ -62,4 +62,6 @@ public interface BoardMapper {
 	public List<BoardVO> selectSearchWord(Map<String, Object> map);
 	
 	public int selectSearchwordPage(Map<String, Object> map);
+	
+	public void softdeleteBoard(BoardVO vo);
 }
