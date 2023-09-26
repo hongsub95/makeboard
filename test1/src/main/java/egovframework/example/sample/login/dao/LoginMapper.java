@@ -14,4 +14,8 @@ public interface LoginMapper {
 	
 	public String selectLoginMethod(UserVO vo);
 	
+	public String selectName(UserVO vo);
+	
+	public String selectEmail(Long user_id);
+	
 }

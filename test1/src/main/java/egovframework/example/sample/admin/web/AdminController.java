@@ -10,17 +10,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import egovframework.example.sample.admin.model.GradelogVO;
 import egovframework.example.sample.admin.service.impl.AdminServiceimpl;
 import egovframework.example.sample.board.model.BoardVO;
 import egovframework.example.sample.board.model.PagingVO;
 import egovframework.example.sample.board.service.impl.BoardServiceimpl;
 import egovframework.example.sample.login.service.impl.LoginServiceimpl;
 import egovframework.example.sample.user.model.UserVO;
+import egovframework.example.sample.user.service.impl.UserServiceimpl;
 
 @Controller
 public class AdminController {
@@ -34,7 +37,11 @@ public class AdminController {
 	@Autowired
 	private AdminServiceimpl adminservice;
 	
+	@Autowired
+	private UserServiceimpl userservice;
+	
 	private PagingVO getPaging(HttpServletRequest request,int total) {
+		
 		int nowPage = Integer.parseInt(request.getParameter("page"));
 		PagingVO pagingvo = new PagingVO(total,nowPage,10);
 		return pagingvo;
@@ -78,6 +85,7 @@ public class AdminController {
 					mav.addObject("msg","notAccess");
 					return mav;
 				}
+				
 				session.setAttribute("email", user.getEmail());
 				session.setAttribute("name", user.getName());
 				session.setAttribute("user_id", user.getUser_id());
@@ -120,14 +128,155 @@ public class AdminController {
 		return "sample/admin/board/AdminBoardList";
 	}
 	
-	@RequestMapping("/AdminDeleteBoard.do")
-	public void AdminBoardDelete(HttpServletRequest request,@RequestParam List<String> checkedValue,String id) {
-		Long board_id = new Long(Integer.parseInt(request.getParameter("id")));
-		for (String c : checkedValue) {
-			adminservice.AdmindeleteBoard(board_id, c);
+	@RequestMapping(value="/AdminDeleteBoard.do",method=RequestMethod.POST)
+	@ResponseBody
+	public String AdminBoardDelete(HttpServletRequest request,@RequestParam(value="checkedValue[]") List<String> checked,BoardVO vo) {
+		
+		
+		if (checked == null) {
+			return "fail";
 		}
+		
+	    String checked_str = "";
+	    for(String c : checked) {
+	    	
+	    	checked_str += c+", ";
+	    	
+	    }
+	    int lenCheckedStr = checked_str.length();
+	    checked_str = checked_str.substring(0, lenCheckedStr-2);
+		Long board_id = new Long(Integer.parseInt(request.getParameter("id")));
+		vo.setId(board_id);
+		
+		
+		adminservice.AdmindeleteBoard(board_id, checked_str);
+
+		boardservice.boardSoftdelete(vo);
+		
+		return "success";
 	}
 	
+	@RequestMapping("/AdminBoardDetail.do")
+	public String AdminBoardDetail(HttpServletRequest request,Model model,int id) {
+		model.addAttribute("board",boardservice.canSelect(id));
+		model.addAttribute("files",boardservice.getFiles(id));
+		model.addAttribute("heart",boardservice.findAllHeart(id));
+		return "sample/admin/board/AdminBoardDetail";
+	}
+	
+	@RequestMapping("AdminUserList.do")
+	public String AdminUserList() {
+		return "sample/admin/user/AdminUserList";
+	}
+	
+	
+	
+	@RequestMapping("/AdminUserListdata.do")
+	@ResponseBody
+	public ModelAndView AdminUserListdata(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		mav.setView(jsonView);
+		int total = userservice.findUserCnt();
+		PagingVO pagingvo = getPaging(request,total);
+		List<UserVO> userlist = userservice.findAllUser(pagingvo);
+		mav.addObject("userlist",userlist);
+		mav.addObject("pages", pagingvo);
+		return mav;
+		
+		
+	}
+	
+	@RequestMapping("/AdminUserListdataBygrade.do")
+	@ResponseBody
+	public ModelAndView AdminUserListdataBygrade(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		mav.setView(jsonView);
+		int total = userservice.findUserCnt();
+		PagingVO pagingvo = getPaging(request,total);
+		List<UserVO> userlist = userservice.findAllUserBygrade(pagingvo);
+		mav.addObject("userlist",userlist);
+		mav.addObject("pages", pagingvo);
+		return mav;
+		
+		
+	}
+	
+	@RequestMapping("/AdminUserDelete.do")
+	@ResponseBody
+	public ModelAndView AdminUserDelete(HttpServletRequest request,UserVO vo) {
+		ModelAndView mav = new ModelAndView();
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		mav.setView(jsonView);
+		String reason = request.getParameter("deleteReason");
+		System.out.println(reason);
+		Long user_id = new Long(Integer.parseInt(request.getParameter("user_id")));
+		if (reason == null || reason == "" || reason.equals("")) {
+			mav.addObject("msg","noReason");
+		}
+		else {
+			vo.setUser_id(user_id);
+			vo.setDeleteReason(reason);
+			userservice.softdeleteReason(vo);
+			userservice.softdeleteUser(vo);
+			mav.addObject("msg","success");
+		}
+		return mav;
+		
+	}
+		
+	@RequestMapping("/AdminGradeUpdate.do")
+	@ResponseBody
+	public ModelAndView AdminGradeUpdate(HttpServletRequest request,UserVO vo,GradelogVO logvo) {
+		ModelAndView mav = new ModelAndView();
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		mav.setView(jsonView);
+		// 등급을 조정한 user
+		Long user_id1 = new Long(Integer.parseInt(request.getParameter("user_id1")));
+		// 등급을 조정받은 user
+		Long user_id2 = new Long(Integer.parseInt(request.getParameter("user_id2")));
+		// 조정받기 전 등급
+		int grade1 = Integer.parseInt(request.getParameter("grade1"));
+		// 조정받은 후 등급
+		int grade2 = Integer.parseInt(request.getParameter("grade2"));
+		
+		vo.setUser_id(user_id2);
+		
+		String name = loginserviceimpl.findName(vo);
+		
+		userservice.updateGrade(vo, logvo,user_id1,user_id2,grade1,grade2);
+		
+		mav.addObject("name",name);
+		mav.addObject("grade1",grade1);
+		mav.addObject("grade2",grade2);
+		
+		return mav;
+		
+	}
+	
+	@RequestMapping("AdminGradelogView.do")
+	public String AdminGradelogView(HttpServletRequest request,Model model) {
+		model.addAttribute("loglist",request.getParameter("loglist[]"));
+		return "sample/admin/user/AdminGradelog";
+	}
+	
+	@RequestMapping("/AdminGradelog.do")
+	@ResponseBody
+	public ModelAndView AdminGradelog(HttpServletRequest request) {
+		int total = adminservice.findallGradeLogcnt();
+		int nowPage = Integer.parseInt(request.getParameter("page"));
+		PagingVO pagingvo = new PagingVO(total,nowPage,15);
+		ModelAndView mav = new ModelAndView();
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		mav.setView(jsonView);
+		List<GradelogVO> logList = adminservice.findallGradeLog(pagingvo);
+		
+		mav.addObject("gradeloglist",logList);
+		mav.addObject("pages",pagingvo);
+		
+		return mav;
+	}
 	
 	
 	

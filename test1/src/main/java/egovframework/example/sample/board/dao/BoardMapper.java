@@ -64,4 +64,6 @@ public interface BoardMapper {
 	public int selectSearchwordPage(Map<String, Object> map);
 	
 	public void softdeleteBoard(BoardVO vo);
+	
+	public String selectfileId(String savedFileName);
 }

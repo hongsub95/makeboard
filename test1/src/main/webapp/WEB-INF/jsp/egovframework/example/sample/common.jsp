@@ -8,20 +8,42 @@
 <html>
 <head>
 <meta charset="UTF-8">
+
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
 <link href="css/egovframework/board.css" rel="stylesheet"/>
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-<script type="text/javascript" src="<c:url value='/js/com/jquery-3.7.0.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/js/com/jquery-3.7.0.min.js' />"></script>
+<%-- <script type="text/javascript" src="<c:url value='/smarteditor/js/service/HuskyEZCreator.js'/>" charset='utf-8'></script>
+ --%>
+<%-- <script type="text/javascript" src="<c:url value='/ckeditor/ckeditor.js'/>"></script> --%>
 
-<title>Insert title here</title>
+<!--  ckeditor5 editor -->
+<%-- <script type="text/javascript" src="<c:url value='/ckeditor2/ckeditor.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/ckeditor2/ko.js'/>"></script>  --%>
+
+<!-- tinymce  -->
+<%-- <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tinymce/tinymce-jquery@2/dist/tinymce-jquery.min.js"></script>
+<script src="<c:url value='tiny/langs/ko_KR.js'/>"></script> --%>
+ <!-- summernote  -->
+<link href="summernote/summernote-lite.css" rel="stylesheet"/>
+<script type="text/javascript" src="<c:url value='summernote/summernote-lite.js'/>"></script>
+<script type="text/javascript" src="<c:url value='summernote/lang/summernote-ko-KR.js'/>"></script> 
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script> -->
+
+
+ 
+
+<title>Board For Everyone</title>
+
+
 	<script>
-
-
 	$(document).ready(function() {
 		
 		
 		$(".logout").click(function(event){
 			var result = confirm("로그아웃 하시겠습니까?");
-			console.log(result);
 			if (result){
 				alert("로그아웃되었습니다.");
 				location.href="/Logout.do";
@@ -33,7 +55,7 @@
 		})
 	});
 	
-	;
+	
 
 		
 	
@@ -62,7 +84,7 @@
 			</c:otherwise>
 		</c:choose>
 		<a style="text-decoration:none; color:black; font-size:large;" href="BoardList.do?page=1&order=created" class="boardlist">게시판 목록</a>
-	</div>
+		</div>
 	</header>
 	
 	<div>

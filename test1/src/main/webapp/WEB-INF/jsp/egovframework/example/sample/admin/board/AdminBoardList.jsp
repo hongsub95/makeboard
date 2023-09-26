@@ -7,7 +7,11 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script>
+
+	
 	$(document).ready(function(){
+		
+		
 		
 		selectOnchange = function(){
 			var select = $("#orderByselect").val();
@@ -19,10 +23,9 @@
 	});
 	
 	function deletebtn(board_id){
-		var checkboxpage="";
-		checkboxpage+="<div style='position:absolute; right:25%; top:8%; background-color:white; width:800px; height:800px; border:2px solid; z-index:10; '>";
-		checkboxpage+="<form action='/AdminDeleteBoard.do' method='get'>";
-		checkboxpage+="<div style='display:flex; flex-direction:column; justify-content:space-between; align-items:center;'>";
+		var checkboxpage ="<div id='checkBox' style='position:fixed; width:100%; height:100%; background-color:rgba( 255, 255, 255, 0.5 ); z-index:1;'>" 
+		checkboxpage +="<div style='position:absolute; right:25%; top:30%; background-color:white; width:800px; height:600px; border:2px solid; z-index:2;'>";
+		checkboxpage+="<div style='display:flex; flex-direction:column; justify-content:center; align-items:center;'>";
 		checkboxpage+="<div style='margin-top:30px;'>";
 		checkboxpage+="<label><input type='checkbox' name='checkedValue' value='부적절한 단어 및 문장 사용' />부적절한 단어 및 문장 사용</label>";
 		checkboxpage+="</div>";
@@ -45,16 +48,65 @@
 		checkboxpage+="<textarea style='resize:none; outline:none; ' rows='10' cols='40' name='checkedValue' value='기타' placeholder='기타'></textarea>";
 		checkboxpage+="</div>";
 		checkboxpage+="<div style='margin-top:30px'>";
-		checkboxpage+="<input type='submit'/>";
+		checkboxpage+="</div >";
+		checkboxpage+="<div style='display:flex;'>";
+		checkboxpage+="<button type='button' style='margin-right:25px;' onClick='cancelBtn();'>취소</button>";
+		checkboxpage+="<button type='button' onClick='submitBtn("+board_id+");'>삭제</button>";
 		checkboxpage+="</div >";
 		checkboxpage+="</div >";
-		checkboxpage+="</form>";
 		checkboxpage+="</div>";
+		checkboxpage+="</div>"
 		$(".board_list").append(checkboxpage);
 		
 	}
-
 	
+	cancelBtn = function(){
+		$("#checkBox").remove();
+	}
+	
+	submitBtn = function(board_id){
+		var checkList = [];
+		if ($("textarea[name='checkedValue']").val() != ''){
+			checkList.push($("textarea[name='checkedValue']").val());
+		}
+		 $("input[name='checkedValue']").each(function (index){
+			if ($(this).is(":checked")==true){
+				checkList.push($(this).val());
+			}
+			
+			})
+		/* var checkStr = checkList.join(","); */
+		var res = confirm("삭제 하시겠습니까?");
+			if (res){
+				$.ajax({
+					url:'<c:url value="/AdminDeleteBoard.do" />',
+					data:{
+						"id":board_id,
+						"checkedValue":checkStr
+					},
+					type:"POST",
+					success:function(result){
+						console.log(result);
+						if (result == "fail"){
+							
+							alert("삭제 사유를 1개 이상 체크해 주세요.");
+							return false;
+						}
+						
+						else if (result == "success"){
+							alert("성공적으로 삭제하였습니다.");
+							location.reload();
+						}
+					
+							
+					}
+							
+				});
+			}
+			
+				
+	}
+		 
 
 
 		
@@ -88,7 +140,7 @@
 					
 						<tr>
 						 	<td>${pages.total- ((pages.nowPage -1) * pages.perPage) - status.index }</td>
-							<td><a style="text-decoration:none;" href="BoardDetail.do?id=${row.id}">
+							<td><a style="text-decoration:none;" href="AdminBoardDetail.do?id=${row.id}">
 								<c:choose>
 									<c:when test="${fn:length(row.title)>15}">
 										<c:out value="${fn:substring(row.title,0,14)}"/>
@@ -141,19 +193,34 @@
 					</div>
 				</c:otherwise>
 			</c:choose>
-				
-				<div style="position:absolute; bottom:-80px; right:30%;">
-		   			<c:if test="${pages.existPrePage}">
-				   		<a style="font-size:large;" href="AdminBoardList.do?page=${pages.nowPage - 1}&order=create">Previous</a>
-				   	</c:if>
-				   	<c:forEach var="num" begin="${pages.startPage}" end="${pages.endPage}">
-				   		<a style="margin-left:10px;font-size:large;" href="AdminBoardList.do?page=${num}&order=create">${num}</a>
-				   	</c:forEach>
-				    <c:if test="${pages.existNextPage}">
-				   		<a style="margin-left:10px;font-size:large;" href="AdminBoardList.do?page=${pages.nowPage + 1}&order=create">Next</a>
-					</c:if>
-				</div>
-			
+			<c:choose>
+				<c:when test="${param.order == 'heart' }">
+					<div style="position:absolute; bottom:-80px; right:30%;">
+			   			<c:if test="${pages.existPrePage}">
+					   		<a style="font-size:large;" href="AdminBoardList.do?page=${pages.nowPage - 1}&order=heart">Previous</a>
+					   	</c:if>
+					   	<c:forEach var="num" begin="${pages.startPage}" end="${pages.endPage}">
+					   		<a style="margin-left:10px;font-size:large;" href="AdminBoardList.do?page=${num}&order=heart">${num}</a>
+					   	</c:forEach>
+					    <c:if test="${pages.existNextPage}">
+					   		<a style="margin-left:10px;font-size:large;" href="AdminBoardList.do?page=${pages.nowPage + 1}&order=heart">Next</a>
+						</c:if>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div style="position:absolute; bottom:-80px; right:30%;">
+			   			<c:if test="${pages.existPrePage}">
+					   		<a style="font-size:large;" href="AdminBoardList.do?page=${pages.nowPage - 1}&order=create">Previous</a>
+					   	</c:if>
+					   	<c:forEach var="num" begin="${pages.startPage}" end="${pages.endPage}">
+					   		<a style="margin-left:10px;font-size:large;" href="AdminBoardList.do?page=${num}&order=create">${num}</a>
+					   	</c:forEach>
+					    <c:if test="${pages.existNextPage}">
+					   		<a style="margin-left:10px;font-size:large;" href="AdminBoardList.do?page=${pages.nowPage + 1}&order=create">Next</a>
+						</c:if>
+					</div>
+				</c:otherwise>
+			</c:choose>
    		</div>
 	</div> 	
 </body>

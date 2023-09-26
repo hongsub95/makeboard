@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Gradelog">
+  <resultMap type="GradelogVO" id="GradelogMap">  
+		<result column="gradeId" property="gradeId"/>
+		<result column="qualify_userId" property="qualify_userId"/>
+		<result column="qualified_userId" property="qualified_userId"/>
+		<result column="qualify_grade" property="qualify_grade"/>
+		<result column="qualified_grade" property="qualified_grade"/>
+		<result column="created" property="created"/>
+	</resultMap>
+	
+	<insert id="insertGradeLog" parameterType="GradelogVO">
+	INSERT INTO grade_logs
+		(gradeId,qualify_userId,qualified_userId,qualify_grade,qualified_grade,created)
+	VALUES
+		(#{gradeId},#{qualify_userId},#{qualified_userId},#{qualify_grade},#{qualified_grade},#{created})
+	</insert>
+	
+	<select id="selectGradelog" parameterType="PagingVO" resultType="Map">
+	SELECT
+		logs.gradeId,
+		(SELECT
+			user.email
+		FROM 
+			users_user AS user
+		WHERE
+			user.user_id = logs.qualify_userId
+		)AS qualify_email,
+		(SELECT
+			user.email
+		FROM
+			users_user AS user
+		WHERE
+			user.user_id = logs.qualified_userId
+		)AS qualified_email,
+		logs.qualify_grade,
+		logs.qualified_grade,
+		logs.created
+	FROM 
+		grade_logs AS logs
+	ORDER BY
+		created DESC
+	LIMIT #{perPage} OFFSET #{limitStart}
+	
+	</select>
+	
+	<select id="GradelogTotalcnt" resultType="int">
+	
+	SELECT
+		COUNT(*)
+	FROM
+		grade_logs
+	
+	</select>
+
+</mapper>

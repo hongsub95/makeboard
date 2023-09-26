@@ -2,6 +2,8 @@ package egovframework.example.sample.board.web;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
+import egovframework.example.sample.board.model.BoardFileVO;
 import egovframework.example.sample.board.model.BoardVO;
 import egovframework.example.sample.board.model.PagingVO;
 import egovframework.example.sample.board.service.impl.BoardServiceimpl;
@@ -32,11 +35,16 @@ public class BoardController {
 	@Autowired
 	private BoardServiceimpl boardservice;
 	
+	@Autowired
+	private FileUtils fileutils;
+	
 	private PagingVO getPaging(HttpServletRequest request,int total) {
 		int nowPage = Integer.parseInt(request.getParameter("page"));
 		PagingVO pagingvo = new PagingVO(total,nowPage,10);
 		return pagingvo;
 	}
+	
+	
 	
 
 	@RequestMapping("/home.do")
@@ -95,9 +103,58 @@ public class BoardController {
 		return "sample/board/BoardForm";
 	}
 	
-	@PostMapping("/BoardForm.do")
-	public ModelAndView addBoard(BoardVO vo, HttpServletRequest request,MultipartFile[] uploadFile) throws Exception {
+	@PostMapping("/BoardFile.do")
+	@ResponseBody
+	public ModelAndView BoardFile(@RequestParam("board_id") String board_id,BoardVO vo, HttpServletRequest request,MultipartFile uploadFile,HttpServletResponse response) throws Exception {
+		HttpSession session = request.getSession(false);
+		response.setContentType("text/html;charset=utf-8");
+		ModelAndView mav = new ModelAndView();
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		mav.setView(jsonView);
+		System.out.println(uploadFile);
+		String email = (String) session.getAttribute("email");
+		Long user_id = (Long) session.getAttribute("user_id");
+		String name = (String) session.getAttribute("name");
+		String category = request.getParameter("type");
+		vo.setUser_id(user_id);
+		vo.setUser_name(name);
+		// 파일이 처음 들어왔을 경우
+		if (board_id.equals("undefined")){
+			boardservice.canPost(vo, email);
+		}
+		// 파일이 두번째 이상 들어왔을 경우
+		else {
+			vo.setId(new Long(Integer.parseInt(board_id)));
+		}
+		BoardFileVO filevo = boardservice.postFile(vo, uploadFile,category);
+		String storedFileName = filevo.getFileName();
+		mav.addObject("file","/staticfile/"+storedFileName);
+		mav.addObject("file_name",storedFileName);
+		mav.addObject("board_id",vo.getId());
+		mav.addObject("file_id",filevo.getFile_id());
+		return mav;
 		
+		
+		
+	}
+	
+	@RequestMapping("/selectFileId.do")
+	@ResponseBody
+	public ModelAndView selectFileId(@RequestParam("savedName") String SavedFileName) {
+		String file_id = boardservice.findFileId(SavedFileName);
+		ModelAndView mav = new ModelAndView();
+		MappingJackson2JsonView jsonView = new MappingJackson2JsonView();
+		mav.setView(jsonView);
+		mav.addObject("file_id",file_id);
+		return mav;
+	}
+	
+	
+	
+	@PostMapping("/BoardForm.do")
+	public ModelAndView addBoard(BoardVO vo, HttpServletRequest request,@RequestParam HashMap<String, Object> param) throws Exception {
+		/*String newFileJson = (String) param.get("newFileList");
+		String[] newFileList = newFileJson.substring(1,newFileJson.length()-1).split(",");*/
 		HttpSession session = request.getSession(false);
 		String email = (String) session.getAttribute("email");
 		Long user_id = (Long) session.getAttribute("user_id");
@@ -109,6 +166,7 @@ public class BoardController {
 		mav.setView(jsonView);
 		vo.setUser_id(user_id);
 		vo.setUser_name(name);
+		
 		if(email == null) {
 			mav.addObject("msg","sessionExpired");
 			return mav;
@@ -123,14 +181,16 @@ public class BoardController {
 			return mav;
 		}
 		else {
-			
+			vo.setIsCompleted(true);
 			boardservice.canPost(vo,email);
-			boardservice.postFile(vo, uploadFile);
+			/*boardservice.findnoExistFileId(newFileList);*/
 			mav.addObject("msg", "success");
 			return mav;
+			}
+			
 		}
 	
-	}
+	
 	
 	@RequestMapping("/BoardDetail.do")
 	public String boardDetailView(int id,Model model) throws Exception {
@@ -144,10 +204,11 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/boardupdate.do")
-	public String boardUpdateView(HttpServletRequest request,BoardVO vo,MultipartFile[] uploadFile) throws Exception {
+	public String boardUpdateView(HttpServletRequest request,BoardVO vo,MultipartFile uploadFile) throws Exception {
 		Long board_id = new Long(Integer.parseInt(request.getParameter("board_id")));
+		String category = request.getParameter("type");
 		vo.setId(board_id);
-		boardservice.canFileUpdate(vo, uploadFile);
+		boardservice.canFileUpdate(vo, uploadFile,category);
 		boardservice.canUpdate(vo);
 		return "redirect:/BoardList.do?page=1";
 	}
@@ -197,12 +258,21 @@ public class BoardController {
 		response.getOutputStream().close();
 	}
 	
+	@RequestMapping("/goOutBoard.do")
+	@ResponseBody
+	public void goOutBoard(@RequestParam("board_id") String board_id) {
+		Long boardId = new Long(Integer.parseInt(board_id));
+		boardservice.DeleteAllFiles(boardId);
+		boardservice.canDelete(Integer.parseInt(board_id));
+	}
+	
 	@RequestMapping("/fileDelete.do")
 	@ResponseBody
 	public void fileDelete(int file_id) {
 		
 		boardservice.DeleteFile(file_id);
 	}
+	
 	
 	@RequestMapping("/plusHeart.do")
 	public String plusHeart(int user_id,int board_id, Model model) {

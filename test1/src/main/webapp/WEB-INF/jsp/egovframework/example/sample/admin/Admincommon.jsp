@@ -8,11 +8,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link href="css/egovframework/board.css" rel="stylesheet"/>
+<link href="css/egovframework/board.css?after" rel="stylesheet"/>
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
 <script type="text/javascript" src="<c:url value='/js/com/jquery-3.7.0.min.js'/>"></script>
 
-<title>Insert title here</title>
+<title>Board For Admin</title>
 	<script>
 
 
@@ -30,27 +30,40 @@
 				location.reload();
 			}
 		})
-		var sessionId = $("#sessionId").val();
+		var sessionAdminId = $("#sessionAdminId").val();
 		
-		if (sessionId == '' || sessionId == ' '){
+		if (sessionAdminId == '' || sessionAdminId == ' '){
+			location.href="/AdminLoginForm.do";
+		}
+		else if (sessionAdminId == 0){
 			location.href="/AdminLoginForm.do";
 		}
 	});
 	
-	;
+	/* AdminuserBtn = function(){
+		$.ajax({
+			url:'<c:url value="/AdminUserList.do"/>',
+			data:{"page":"1"},
+			type:"get",
+			success:function()
+		})
+		
+		
+	} */
 
 		
 	
 	</script>
 </head>
 <body>
-	<input type="hidden" id="sessionId" value="${sessionScope.is_admin }"/>
+	<input type="hidden" id="sessionAdminId" value="${sessionScope.is_admin }"/>
+	
 	<header>
 		<div class="header-nav menu_effect">
 			<a style="text-decoration:none; color:black; font-size:large;" href="Adminhome.do" id="home">Home</a>
 			<a style="text-decoration:none; color:black; font-size:large;" href="AdminLoginForm.do" id="logout">로그아웃</a>
 			<a style="text-decoration:none; color:black; font-size:large;" href="AdminBoardList.do?page=1" id="adminboard">게시물관리</a>
-			<a style="text-decoration:none; color:black; font-size:large;" href="home.do" id="home">회원관리</a>
+			<a style="text-decoration:none; color:black; font-size:large;" href="AdminUserList.do"  id="adminuser">회원관리</a>
 		</div>
 	</header>
 	

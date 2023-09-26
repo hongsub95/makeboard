@@ -76,6 +76,11 @@
 		<div style="display:flex; justify-content:center; margin-top:20px;">
 				<button style="cursor:pointer; width:100px; border-color:black; background-color:white; color:black; margin-left:10px; " class="loginbtn" type="submit"> 로그인  </button> 
 		</div>
+		<div class="kakao_Loginbtn" style=" display:flex; justify-content:center; margin-top:50px; margin-bottom:30px; padding-rigth:50px;">
+			<a style="display:flex; justify-content:center; align-items:center;text-align:center;width:400px;height:5vh;border:2px solid;border-radius:1.2rem; border-color:#964b00; background-color:#F7E600; color:#964b00; font-weight:bold;font-size:x-large; text-decoration:none;" href="https://kauth.kakao.com/oauth/authorize?response_type=code&redirect_uri=http://localhost:8080/auth/kakao/callback.do&client_id=b5a3afb094585ae6bd3ad90921e1b7c0">카카오톡
+				<i class="fas fa-comment mr-2 fa-lg"></i>
+			</a>
+		</div>
 	
 </div>
 </body>

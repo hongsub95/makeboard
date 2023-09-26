@@ -19,6 +19,9 @@ public interface LoginService {
 	public String getAccessToken(String code);
 	
 	public Map<String,Object> getUserInfo(String AccessToken);
-
+	
+	public String findName(UserVO vo);
+	
+	public String findEmail(Long user_id);
 	
 }

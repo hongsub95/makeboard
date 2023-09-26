@@ -1,5 +1,6 @@
 package egovframework.example.sample.board.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,9 +34,9 @@ public interface BoardService {
 	
 	public int getPagemyTotal(Long user_id);
 
-	public void postFile(BoardVO vo,MultipartFile[] uploadFile) throws Exception;
+	public BoardFileVO postFile(BoardVO vo,MultipartFile uploadFile,String category) throws Exception;
 	
-	public void canFileUpdate(BoardVO vo,MultipartFile[] uploadFile) throws Exception;
+	public void canFileUpdate(BoardVO vo,MultipartFile uploadFile,String Category) throws Exception;
 	
 	public List<BoardFileVO> getFiles(int board_id);
 	
@@ -62,5 +63,9 @@ public interface BoardService {
 	public int searchWordPage(BoardVO boardvo,String word);
 	
 	public void boardSoftdelete(BoardVO vo);
+	
+	public String findFileId(String savedFileName);
+	
+	public void findnoExistFileId(String[] newFileList);
 	
 }

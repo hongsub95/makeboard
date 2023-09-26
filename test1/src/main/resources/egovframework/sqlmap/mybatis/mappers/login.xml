@@ -10,32 +10,44 @@
 		<result column="isAdmin" property="isAdmin"/>
 		<result column="created" property="created"/>
 		<result column="updated" property="updated"/>
+		<result column="deleted" property="deleted"/>
+		<result column="isDeleted" property="isDeleted"/>
+		<result column="grade" property="grade"/>
 	</resultMap>
 	
 	<insert id="insertUser" parameterType="UserVO">
 	
 		INSERT INTO users_user
-		(user_id,email,password,name,isAdmin,created,loginMethod)
+		(user_id,email,password,name,isAdmin,created,loginMethod,grade)
 		VALUES
-		(#{user_id},#{email},#{password},#{name},#{isAdmin},#{created},#{loginMethod})
+		(#{user_id},#{email},#{password},#{name},#{isAdmin},#{created},#{loginMethod},#{grade})
 	
 	</insert>
 	
 	<insert id="insertKakaoUser" parameterType="UserVO">
 	
 		INSERT INTO users_user
-		(user_id,email,name,loginMethod,isAdmin,created)
+		(user_id,email,name,loginMethod,isAdmin,created,grade)
 		VALUES
-		(#{user_id},#{email},#{name},#{loginMethod},#{isAdmin},#{created})
+		(#{user_id},#{email},#{name},#{loginMethod},#{isAdmin},#{created},#{grade})
 	
 	</insert>
 	
-	<select id="selectName" resultType="UserVO">
+	<select id="selectName" resultType="String">
 	
 		SELECT
-			user_id,
-			email,
 			name
+		FROM
+			users_user
+		WHERE
+			user_id = #{user_id}
+	
+	</select>
+	
+	<select id="selectEmail" resultType="String">
+	
+		SELECT
+			email
 		FROM
 			users_user
 		WHERE
@@ -50,7 +62,8 @@
 			email,
 			password,
 			name,
-			isAdmin
+			isAdmin,
+			grade
 		FROM 
 			users_user
 		WHERE

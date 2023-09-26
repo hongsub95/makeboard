@@ -36,5 +36,15 @@ public class LoginDAO implements LoginMapper{
 		return sqlsession.selectOne("login.selectLoginMethod",vo);
 	}
 	
+	@Override
+	public String selectName(UserVO vo) {
+		return sqlsession.selectOne("login.selectName",vo);
+	}
+	
+	@Override
+	public String selectEmail(Long user_id) {
+		return sqlsession.selectOne("login.selectEmail",user_id);
+	}
+	
 	
 }

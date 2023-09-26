@@ -15,6 +15,7 @@ public class UserVO {
 	private boolean isDeleted;
 	private int grade;
 	private boolean isAdmin;
+	private String deleteReason;
 	
 
 	
@@ -109,4 +110,14 @@ public class UserVO {
 	public void setIsDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
 	}
+
+	public String getDeleteReason() {
+		return deleteReason;
+	}
+
+	public void setDeleteReason(String deleteReason) {
+		this.deleteReason = deleteReason;
+	}
+
+	
 }

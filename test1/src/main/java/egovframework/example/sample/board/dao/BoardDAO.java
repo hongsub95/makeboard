@@ -29,7 +29,7 @@ public class BoardDAO implements BoardMapper{
 	// 게시물 생성(post)
 	@Override
 	public void insertBoard(BoardVO vo) {
-		
+		System.out.println(vo.getContent());
 		sqlsession.insert("Board.insertboard",vo);
 	}
 	
@@ -140,6 +140,11 @@ public class BoardDAO implements BoardMapper{
 	@Override
 	public int selectSearchwordPage(Map<String, Object> map) {
 		return sqlsession.selectOne("Board.selectSearchwordpage",map);
+	}
+	
+	@Override
+	public String selectfileId(String savedFileName) {
+		return sqlsession.selectOne("BoardFile.selectfile",savedFileName);
 	}
 	
 	

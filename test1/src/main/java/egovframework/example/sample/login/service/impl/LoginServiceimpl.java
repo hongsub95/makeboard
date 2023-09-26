@@ -123,4 +123,14 @@ public class LoginServiceimpl implements LoginService{
 		return kAccount;
 		
 	}
+	
+	@Override
+	public String findName(UserVO vo) {
+		return logindao.selectName(vo);
+	}
+	
+	@Override 
+	public String findEmail(Long user_id) {
+		return logindao.selectEmail(user_id);
+	}
 }

@@ -19,18 +19,18 @@ import egovframework.example.sample.board.model.BoardVO;
 @Component
 public class FileUtils {
 	
-	private static final String filePath = "C:\\staticfile";
+	private static final String filePath = "C://staticfile";
 	
-	public List<BoardFileVO> parseInsertFileInfo(BoardVO vo,MultipartFile[] uploadFile) throws Exception {
+	public BoardFileVO parseInsertFileInfo(BoardVO vo,MultipartFile uploadFile,String category) throws Exception {
 		
 		
 		// 원본 파일 이름
 		String originalFileName = null;
 		String originalFileExtension = null;
 		String storedFileName = null;
+		String originalFileCategory = category;
 		
-		List<BoardFileVO> list = new ArrayList<BoardFileVO>();
-		Map<String,Object> listMap = null;
+		
 		
 		File file = new File(filePath);
 		
@@ -39,7 +39,8 @@ public class FileUtils {
 			file.mkdirs();
 		}
 		
-		for(MultipartFile multipartFile : uploadFile) {
+		/*for(MultipartFile multipartFile : uploadFile) {
+			
 			
 			// 다음 데이터 반환
 			
@@ -64,12 +65,40 @@ public class FileUtils {
 				fileVO.setFileName(storedFileName);
 				fileVO.setFileSize(multipartFile.getSize());
 				fileVO.setBoard_id(vo.getId());
+				
 				list.add(fileVO);
 				
 			}
+		}*/
+		BoardFileVO fileVO = new BoardFileVO();
+		originalFileName = uploadFile.getOriginalFilename();
+	
+		// 확장자는 '.'부터 끝까지
+		originalFileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+		storedFileName = getRandomString() + originalFileExtension;
+	
+		// 저장경로+ 저장될이름의 데이터가 담긴 file
+		file = new File(filePath,storedFileName);
+		
+		// throws exception 해야함
+		// 지정한 경로에 저장될 이름으로 저장
+		try { // 파일생성
+			uploadFile.transferTo(file);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
-		return list;
+		fileVO.setCreated(new Date());
+		fileVO.setOriginalFileName(originalFileName);
+		fileVO.setFileExtension(originalFileExtension);
+		fileVO.setFileName(storedFileName);
+		fileVO.setCategory(originalFileCategory);
+		fileVO.setFileSize(uploadFile.getSize());
+		fileVO.setBoard_id(vo.getId());
+	
+		
+		
+		return fileVO;
 	}
 	
 	public static String getRandomString() {

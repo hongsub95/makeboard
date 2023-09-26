@@ -10,6 +10,7 @@
 		<result column="created" property="created"/>
 		<result column="updated" property="updated"/>
 		<result column="board_id" property="board_id"/>
+		<result column="category" property="category"/>
 		
 	</resultMap>
 	
@@ -25,6 +26,17 @@
 		WHERE
 			board_id = #{board_id}
 	</select>
+	
+	<select id="selectfile" resultType="String" parameterType="String">
+		SELECT 
+			file_id 
+		FROM
+			files_file
+		WHERE
+			STORED_FILE_NAME = #{savedFileName}
+	</select>
+	
+	
 	
 	<select id="filedownload" resultType="hashMap" parameterType="hashMap">
 		SELECT 
@@ -57,7 +69,8 @@
 			STORED_FILE_NAME=#{fileName},
 			FILE_SIZE=#{fileSize},
 			FILE_EXTENSION=#{fileExtension},
-			created=#{created}
+			created=#{created},
+			category=#{category}
 		WHERE
 			board_id=#{board_id}
 	</update>

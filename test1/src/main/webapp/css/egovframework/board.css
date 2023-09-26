@@ -19,6 +19,7 @@ body{
 	display:flex;
 	justify-content:center;
 	align-items:center;
+	height:80%;
 	
 }
 
@@ -84,9 +85,7 @@ body{
 	z-index:-1;
 }
 
-
-
-.board_list_table {
+.board_list_table, .user_list_table{
   border: 1px #a39485 solid;
   font-size: .9em;
   box-shadow: 0 2px 5px rgba(0,0,0,.25);
@@ -95,74 +94,9 @@ body{
   border-radius: 5px;
   overflow: hidden;
   table-layout: fixed;
+  height:70vh;
 }
 
-th {
-  text-align: left;
-}
-  
-.board_list_thead {
-  font-weight: bold;
-  color: #fff;
-  background: #ffc0cb ;
-}
-  
-td, th {
-  padding: 1em .5em;
-  vertical-align: middle;
-}
-  
-td {
-  border-bottom: 1px solid rgba(0,0,0,.1);
-  background: #fff;
-}
-
-a {
-  color: #73685d;
-}
-  
-@media all and (max-width: 768px) {
-    
-board_list_table, board_list_thead, board_list_tbody, th, td, tr {
-    display: block;
-  }
-  
-th {
-    text-align: right;
-  }
-  
-table {
-    position: relative; 
-    padding-bottom: 0;
-    border: none;
-    box-shadow: 0 0 10px rgba(0,0,0,.2);
-  }
-  
-.board_list_thead {
-    float: left;
-    white-space: nowrap;
-  }
-  
-.board_list_tbody {
-    overflow-x: auto;
-    overflow-y: hidden;
-    position: relative;
-    white-space: nowrap;
-  }
-  
-tr {
-    display: inline-block;
-    vertical-align: top;
-  }
-  
-th {
-    border-bottom: 1px solid #a39485;
-  }
-  
-td {
-    border-bottom: 1px solid #e5e5e5;
-  }
-  
 .page_btn{
 	display: flex;
 	justify-content: center;

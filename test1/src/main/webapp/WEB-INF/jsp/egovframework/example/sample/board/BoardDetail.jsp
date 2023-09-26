@@ -9,8 +9,9 @@
 <script>
 
 	$(document).ready(function(){
-		
-		
+		var data = $("#boardcontent").val();
+		$(".boarddetailcontent").html(data.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g,'"').replace(/&#40;/g,'(').replace(/&#41;/g,')').replace(/&#35;/g,'#'));
+		$(".table-bordered").attr("border","1");
 		
 		$(".boardupdatebtn").click(function(){
 			var result = confirm("수정하시겠습니까?");
@@ -172,7 +173,7 @@
 		<form method="post" action="">
 		<input id="id" name="id" type="hidden" value="${board.id}"><br>
 		<input class="board_user_id" name="board_user_id" type="hidden" value="${board.user_id}"><br>
-		
+		<input id="boardcontent" type="hidden" value="${board.content }"/>
 		<table style="width:80%;">
 			<tr>
 			
@@ -197,18 +198,11 @@
 				</td>
 			</tr>
 			<tr>
-			<c:choose>
-				<c:when test="${!empty sessionScope.user_id && sessionScope.user_id == board.user_id}">
-					<td colspan = "3" style="color:white">
-						<textarea style="resize:none; border:none; width:800px; height:60vh; font-size:x-large; outline:none;" name="content" class="boarddetailcontent">${board.content}</textarea>
-					</td>
-				</c:when>
-				<c:otherwise>
-					<td colspan = "3" style="color:white">
-						<textarea style="resize:none; border:none; width:800px; height:60vh; font-size:x-large; outline:none;" readonly="readonly" name="content" class="boarddetailcontent">${board.content}</textarea>
-					</td>
-				</c:otherwise>
-			</c:choose>	
+				<td colspan = "3">
+					<div style="border:none; width:800px; min-height:60vh; font-size:x-large; outline:none;" class="boarddetailcontent">
+						
+					</div>
+				</td>
 			</tr>
 			<tr>
 				<td colspan = "3" >

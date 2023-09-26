@@ -1,5 +1,6 @@
 package egovframework.example.sample.board.model;
 import java.util.Date;
+import java.util.List;
 
 
 
@@ -15,6 +16,7 @@ public class BoardVO {
 	private Long user_id;
 	private String user_name;
 	private String deleteReason;
+	private boolean isCompleted;
 	private boolean isDeleted;
 	
 
@@ -102,6 +104,14 @@ public class BoardVO {
 
 	public void setDeleted(boolean isDeleted) {
 		this.isDeleted = isDeleted;
+	}
+
+	public boolean getIsCompleted() {
+		return isCompleted;
+	}
+
+	public void setIsCompleted(boolean isCompleted) {
+		this.isCompleted = isCompleted;
 	}
 
 

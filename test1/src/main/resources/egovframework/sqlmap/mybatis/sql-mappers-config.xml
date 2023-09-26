@@ -8,6 +8,7 @@
 		<typeAlias alias="HeartVO" type="egovframework.example.sample.board.model.HeartVO"/>
 		<typeAlias alias="PagingVO" type="egovframework.example.sample.board.model.PagingVO"/>
 		<typeAlias alias="UserVO" type="egovframework.example.sample.user.model.UserVO"/>
+		<typeAlias alias="GradelogVO" type="egovframework.example.sample.admin.model.GradelogVO"/>
 	</typeAliases>
 	
 	

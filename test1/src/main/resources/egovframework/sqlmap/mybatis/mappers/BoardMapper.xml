@@ -11,6 +11,7 @@
 		<result column="deleted" property="deleted"/>
 		<result column="isDeleted" property="isDeleted"/>
 		<result column="deleteReason" property="deleteReason"/>
+		<result column="isCompleted" property="isCompleted" />
 		
 	</resultMap>
 	
@@ -41,7 +42,9 @@
 		ON
 			board.user_id = user.user_id
 		WHERE
-			board.isDeleted != true
+			board.isDeleted != true 
+			AND 
+			board.isCompleted = true
 		ORDER BY 
 			count DESC, board.created DESC
 		LIMIT #{perPage} OFFSET #{limitStart}
@@ -57,7 +60,9 @@
 	FROM 
 		boards_board
 	WHERE
-		isDeleted != true
+		isDeleted != true 
+		AND 
+		isCompleted = true
 	
 	</select>
 	
@@ -70,7 +75,9 @@
 	WHERE
 		user_id = #{user_id}
 		AND
-		isDeleted != true
+		isDeleted != true 
+		AND 
+		isCompleted = true
 	
 	</select>
 	
@@ -101,7 +108,9 @@
 		ON
 			board.user_id = user.user_id
 		WHERE
-			board.isDeleted != true
+			board.isDeleted != true 
+			AND 
+			board.isCompleted = true
 		ORDER BY 
 			board.created DESC
 		LIMIT #{perPage} OFFSET #{limitStart}
@@ -129,13 +138,13 @@
 	</select>
 	
 	<insert id="insertboard" parameterType="BoardVO" >
-		<selectKey keyProperty="id" keyColumn="id" resultType="Long" order="AFTER">
-			SELECT LAST_INSERT_ID()
+		<selectKey keyProperty="id" keyColumn="id" resultType="Long" order="BEFORE">
+			SELECT MAX(id)+1 FROM boards_board
 		</selectKey>
 		INSERT INTO boards_board
-			(id,title,content,created,user_id)
+			(id,title,content,created,user_id,isCompleted)
 		VALUES
-			(#{id},#{title},#{content},#{created},#{user_id}) 
+			(#{id},#{title},#{content},#{created},#{user_id},#{isCompleted}) 
 	</insert>
 	
 	<insert id="insertBoardHeart" parameterType="BoardVO">
@@ -183,6 +192,8 @@
 			board.user_id = #{user_id}
 			AND
 			NOT board.isDeleted = true
+			AND
+			board.isCompleted == true
 		ORDER BY
 			board.created DESC
 		LIMIT #{pagingvo.perPage} OFFSET #{pagingvo.limitStart}
@@ -193,11 +204,15 @@
 	
 	<insert id="insertFile" parameterType="hashMap">
 		
-		INSERT INTO files_file
-			(file_id,board_id,ORG_FILE_NAME,STORED_FILE_NAME,FILE_SIZE,FILE_EXTENSION,created)
-		VALUES
-			(#{file_id},#{board_id},#{originalFileName},#{fileName},#{fileSize},#{fileExtension},#{created})
 		
+		INSERT INTO files_file
+			(file_id,board_id,ORG_FILE_NAME,STORED_FILE_NAME,FILE_SIZE,FILE_EXTENSION,created,category)
+		VALUES
+			(#{file_id},#{board_id},#{originalFileName},#{fileName},#{fileSize},#{fileExtension},#{created},#{category})
+		<selectKey resultType="Long" keyProperty="file_id" keyColumn="file_id" order="AFTER">
+    		SELECT LAST_INSERT_ID()
+    	</selectKey>
+    	
 	</insert>
 	
 	<select id="selectSearchword" parameterType="hashMap" resultType="BoardVO">
@@ -252,13 +267,34 @@
 			id=#{id}
 	</update>
 	
-	<update id="deleteReason" parameterType="HashMap">
-	UPDATE boards_board
-	SET
-		deleteReason = #{deleteReason}
-	WHERE
-		id=#{id}
+	<update id="deleteReason" parameterType="Map">
+	
+		UPDATE
+		 
+			boards_board
+		
+		SET
+			deleteReason = #{deleteReason}
+		WHERE
+			id=#{id}
 	
 	</update>
+	
+	<!-- 삭제된 게시판 리스트 -->
+	<select id="deletedBoardlist">
+	SELECT
+		board.board.id,
+		board.title,
+		board.content,
+		
+	FROM 
+		boards_board AS board
+	JOIN
+		users_user AS user
+	ON
+		board.user_id = user.user_id
+	WHERE
+		isDeleted = true
+	</select>
 	
 </mapper>

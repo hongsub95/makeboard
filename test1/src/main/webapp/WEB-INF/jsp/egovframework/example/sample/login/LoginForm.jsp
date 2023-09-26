@@ -9,7 +9,8 @@
 <script>
 
 	$(document).ready(function(){
-		$(document).on("click",".loginbtn",function(){
+		$(".loginbtn").on("click",function(){
+			console.log($("#password").val());
 			$.ajax({
 				url:'<c:url value="/LoginForm.do" />',
 				data:{
@@ -18,7 +19,7 @@
 				},
 				type:"POST",
 				success:function(result){
-					
+					console.log(result);
 					if(result.msg == "success"){
 						alert(result.name+"님 환영합니다.");
 						location.href="/home.do";
@@ -38,7 +39,11 @@
 			});
 		});
 		
+		
 	});
+	
+	
+	
 
 </script>
 </head>
@@ -64,7 +69,7 @@
 		</div>
 	</form>
 	<div style="display:flex; justify-content:center; margin-top:20px;">
-			<button style="cursor:pointer; width:100px; border-color:black; background-color:white; color:black; margin-left:10px; " class="loginbtn" type="submit"> 로그인  </button> 
+	  <button style="cursor:pointer; width:100px; border-color:black; background-color:white; color:black; margin-left:10px; " class="loginbtn" type="button"> 로그인  </button> 
 	</div>
 </div>
 </body>

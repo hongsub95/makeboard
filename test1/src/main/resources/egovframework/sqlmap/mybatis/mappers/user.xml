@@ -13,6 +13,7 @@
 		<result column="deleted" property="deleted"/>
 		<result column="isDeleted" property="isDeleted"/>
 		<result column="grade" property="grade"/>
+		<result column="deleteReason" property="deleteReason"/>
 	</resultMap>
 	<select id="selectUserinfo" resultType="UserVO">
 		SELECT
@@ -22,7 +23,8 @@
 			name,
 			created,
 			updated,
-			loginMethod
+			loginMethod,
+			grade
 		FROM
 			users_user
 		WHERE
@@ -48,4 +50,83 @@
 			
 	
 	</update>
+	<select id="AlluserByCreated" parameterType="PagingVO" resultType="UserVO">
+		SELECT
+			user_id,
+			email,
+			name,
+			loginMethod,
+			isAdmin,
+			created,
+			updated,
+			deleted,
+			isDeleted,
+			grade
+		FROM
+			users_user
+		WHERE
+			isDeleted != true
+		ORDER BY
+			created DESC
+		LIMIT #{perPage} OFFSET #{limitStart}
+		
+	</select>
+	
+	<select id="AlluserByGrade" parameterType="PagingVO"  resultType="UserVO">
+		SELECT
+			user_id,
+			email,
+			name,
+			loginMethod,
+			isAdmin,
+			created,
+			updated,
+			deleted,
+			isDeleted,
+			grade
+		FROM
+			users_user
+		WHERE
+			isDeleted != true
+		ORDER BY
+			grade DESC, created DESC
+		LIMIT #{perPage} OFFSET #{limitStart}
+		
+	</select>
+	
+	<select id="AllUserCount" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM 
+			users_user
+		WHERE
+			isDeleted != true
+	</select>
+	
+	<update id="SoftdeleteUser" parameterType="UserVO">
+		UPDATE users_user
+		SET
+			deleted=#{deleted},
+			isDeleted=#{isDeleted}
+		WHERE
+			user_id=#{user_id}
+	</update>
+	
+	<update id="SoftdeleteReason" parameterType="UserVO">
+		UPDATE users_user
+		SET
+			deleteReason=#{deleteReason}
+		WHERE
+			user_id=#{user_id}
+	</update>
+	
+	<update id="updateUserGrade" parameterType="UserVO">
+		UPDATE users_user
+		SET
+			grade=#{grade},
+			isAdmin=#{isAdmin}
+		WHERE
+			user_id=#{user_id}
+	</update>
+	
 </mapper>

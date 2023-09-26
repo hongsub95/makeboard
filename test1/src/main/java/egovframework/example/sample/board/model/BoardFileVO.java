@@ -12,6 +12,7 @@ public class BoardFileVO {
 	private String fileExtension;
 	private Date created;
 	private Date updated;
+	private String category;
 	
 	
 	public String getFileExtension() {
@@ -63,6 +64,12 @@ public class BoardFileVO {
 	}
 	public void setUpdated(Date updated) {
 		this.updated = updated;
+	}
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
 	}
 	
 	

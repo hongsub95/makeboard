@@ -5,11 +5,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.example.sample.board.dao.BoardDAO;
 import egovframework.example.sample.board.model.BoardFileVO;
@@ -100,23 +101,16 @@ public class BoardServiceimpl implements BoardService{
 	}
 	
 	@Override
-	public void postFile(BoardVO vo,MultipartFile[] uploadFile) throws Exception {
-		List<BoardFileVO> list =fileutils.parseInsertFileInfo(vo,uploadFile);
-		int size = list.size();
-		for(int i = 0; i<size; i++) {
-			
-			boarddao.insertFile(list.get(i));
-		}
+	public BoardFileVO postFile(BoardVO vo,MultipartFile uploadFile,String category) throws Exception {
+		BoardFileVO filevo =fileutils.parseInsertFileInfo(vo,uploadFile,category);
+		boarddao.insertFile(filevo);
+		return filevo;
 	}
 	
 	@Override
-	public void canFileUpdate(BoardVO vo,MultipartFile[] uploadFile) throws Exception{
-		List<BoardFileVO> list =fileutils.parseInsertFileInfo(vo,uploadFile);
-		int size = list.size();
-		for(int i = 0; i<size; i++) {
-			
-			boarddao.insertFile(list.get(i));
-		}
+	public void canFileUpdate(BoardVO vo,MultipartFile uploadFile,String category) throws Exception{
+		BoardFileVO filevo =fileutils.parseInsertFileInfo(vo,uploadFile,category);
+		boarddao.insertFile(filevo);
 	}
 	
 	@Override
@@ -180,7 +174,7 @@ public class BoardServiceimpl implements BoardService{
 		Map<String,Integer> map = new HashMap<String,Integer>();
 		map.put("user_id", user_id);
 		map.put("board_id", board_id);
-		boarddao.deleteHeart(map);;
+		boarddao.deleteHeart(map);
 	}
 	
 	@Override
@@ -205,4 +199,23 @@ public class BoardServiceimpl implements BoardService{
 		map.put("board",boardvo);
 		return boarddao.selectSearchwordPage(map);
 	}
+	
+	@Override
+	public String findFileId(String savedFileName) {
+		return boarddao.selectfileId(savedFileName);
+	}
+	
+	@Override
+	public void findnoExistFileId(String[] newFileList) {
+		for (String fileId: newFileList) {
+			try {
+				boarddao.deleteFile(Integer.parseInt(fileId));
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
 }
