@@ -83,6 +83,14 @@
 			<artifactId>egovframework.rte.fdl.property</artifactId>
 			<version>${egovframework.rte.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.12</version>
+			<scope>provided</scope>
+		</dependency>
+
 
         <dependency>
 		    <groupId>javax.servlet</groupId>
@@ -171,6 +179,11 @@
 			 <version>1.2.2</version>
 		 </dependency> 
 
+		<dependency>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>javax.mail</artifactId>
+		    <version>1.5.6</version>
+		</dependency>
 		
 		<!-- 		
 		<dependency>
@@ -185,6 +198,36 @@
 		  <version>3.4.5</version>
 		</dependency>
         
+        <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4.7</version>
+		</dependency>
+		
+			
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-mail</artifactId>
+		    <version>2.7.1</version>
+		    <exclusions>
+		        <exclusion>
+		            <groupId>org.springframework.boot</groupId>
+		            <artifactId>spring-boot-starter-logging</artifactId>
+		        </exclusion>
+		    </exclusions>
+		</dependency>
+ 		
+ 		<dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>core</artifactId>
+		    <version>3.5.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.google.zxing</groupId>
+		    <artifactId>javase</artifactId>
+		    <version>3.5.2</version>
+		</dependency>
   
         <dependency>
             <groupId>com.googlecode.log4jdbc</groupId>

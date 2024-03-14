@@ -26,8 +26,6 @@ import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 
 import javax.annotation.Resource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -50,7 +48,7 @@ import org.springframework.stereotype.Service;
 @Service("sampleService")
 public class EgovSampleServiceImpl extends EgovAbstractServiceImpl implements EgovSampleService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EgovSampleServiceImpl.class);
+	
 
 	/** SampleDAO */
 	// TODO ibatis 사용
@@ -72,12 +70,12 @@ public class EgovSampleServiceImpl extends EgovAbstractServiceImpl implements Eg
 	 */
 	@Override
 	public String insertSample(SampleVO vo) throws Exception {
-		LOGGER.debug(vo.toString());
+		
 
 		/** ID Generation Service */
 		String id = egovIdGnrService.getNextStringId();
 		vo.setId(id);
-		LOGGER.debug(vo.toString());
+		
 
 		sampleDAO.insertSample(vo);
 		return id;

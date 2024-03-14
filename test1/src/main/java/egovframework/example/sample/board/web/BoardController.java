@@ -50,6 +50,7 @@ public class BoardController {
 	@RequestMapping("/home.do")
 	public String homePage() {
 		return "sample/home";
+		
 	}
 	
 	@RequestMapping("/BoardList.do")
@@ -273,7 +274,6 @@ public class BoardController {
 		boardservice.DeleteFile(file_id);
 	}
 	
-	
 	@RequestMapping("/plusHeart.do")
 	public String plusHeart(int user_id,int board_id, Model model) {
 		
@@ -321,13 +321,6 @@ public class BoardController {
 		
 		return "sample/board/BoardList";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 }

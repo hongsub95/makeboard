@@ -76,6 +76,11 @@ public class BoardDAO implements BoardMapper{
 	}
 	
 	@Override
+	public void insertMailFile(BoardFileVO fileVO) {
+		sqlsession.insert("Board.insertFile",fileVO);
+	}
+	
+	@Override
 	public List<BoardFileVO> selectFiles(int board_id){
 		return sqlsession.selectList("BoardFile.fileselect",board_id);
 	}

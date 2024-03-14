@@ -10,7 +10,6 @@
 
 	$(document).ready(function(){
 		$(".loginbtn").on("click",function(){
-			console.log($("#password").val());
 			$.ajax({
 				url:'<c:url value="/LoginForm.do" />',
 				data:{
@@ -38,8 +37,6 @@
 	        	}
 			});
 		});
-		
-		
 	});
 	
 	

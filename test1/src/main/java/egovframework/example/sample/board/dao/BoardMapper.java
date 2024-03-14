@@ -59,6 +59,8 @@ public interface BoardMapper {
 	
 	public List<HeartVO> selectAllHeart();
 	
+	public void insertMailFile(BoardFileVO fileVO);
+	
 	public List<BoardVO> selectSearchWord(Map<String, Object> map);
 	
 	public int selectSearchwordPage(Map<String, Object> map);
