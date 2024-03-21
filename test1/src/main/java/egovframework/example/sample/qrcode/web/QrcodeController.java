@@ -21,9 +21,9 @@ public class QrcodeController {
 	
 	@GetMapping("/qrcode.do")
 	public  ResponseEntity<byte[]> getQrCode(ModelAndView mav) throws WriterException, IOException {
-		int width = 200;
-        int height = 200;
-        String url = "http://www.soft-signal.com";
+		int width = 100;
+        int height = 100;
+        String url = "http://www.soft-signal.com/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5ceyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQs";
 
         // QR Code - BitMatrix: qr code 정보 생성
         BitMatrix encode = new MultiFormatWriter()

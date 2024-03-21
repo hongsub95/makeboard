@@ -56,9 +56,9 @@ public class mailServiceImpl{
 		smail.setCc(mailvo.getCcAddressList());
 		smail.setBcc(mailvo.getBccAddressList());
 		smail.setReciever(mailvo.getToAddressList());
-		smail.setMailServer("smtp-mail.outlook.com");
-		smail.setServerId("hsshin@soft-signal.com");
-		smail.setServerPassword("Wjstjf123!");
+		smail.setMailServer("smtp.gmail.com");
+		smail.setServerId("dev.softsignal@gmail.com");
+		smail.setServerPassword("jfkc tbis czyg hsuv");
 		smail.setServerPort(587);
 		smail.send();
 		/*if (smail.send()==false) {

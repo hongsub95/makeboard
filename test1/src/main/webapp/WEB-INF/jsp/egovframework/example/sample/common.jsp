@@ -20,12 +20,13 @@
 <script type="text/javascript" src="<c:url value='summernote/summernote-lite.js'/>"></script>
 <script type="text/javascript" src="<c:url value='summernote/lang/summernote-ko-KR.js'/>"></script> 
 <!-- 풀캘린더  -->
-<script type="text/javascript" src="<c:url value='fullcalendar2/core/index.global.js'/>"></script>
-<script type="text/javascript" src="<c:url value='fullcalendar2/daygrid/index.global.js'/>"></script>
-<script type="text/javascript" src="<c:url value='fullcalendar2/timegrid/index.global.js'/>"></script>
-<script type="text/javascript" src='fullcalendar2/core/locales/ko.global.js'></script>
-<!-- <link href='fullcalendar2/core/index.global.min.css' rel='stylesheet' />
-<link href='fullcalendar2/daygrid/index.global.min.css' rel='stylesheet' />
+<%-- <script type="text/javascript" src="<c:url value='fullcalendar2/core/index.global.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='fullcalendar2/daygrid/index.global.min.js'/>"></script>
+<script type="text/javascript" src="<c:url value='fullcalendar2/timegrid/index.global.min.js'/>"></script> --%>
+<script type="text/javascript" src="<c:url value='fullcalendar3/index.global.js'/>"></script>
+<script type="text/javascript" src='fullcalendar2/core/locales/ko.global.min.js'></script>
+<link href='fullcalendar3/index.global.css' rel='stylesheet' />
+<!--  <link href='fullcalendar2/daygrid/index.global.min.css' rel='stylesheet' />
 <link href='fullcalendar2/timegrid/index.global.min.css' rel='stylesheet' />
 <link href='fullcalendar2/list/index.global.min.css' rel='stylesheet' />  -->
 </head>

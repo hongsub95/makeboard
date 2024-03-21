@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Calendar">
+	
+	
+	
+	<select id="calendarHdYearSelect" resultType="map">
+		SELECT
+			YEAR_ID,
+			YEAR,
+			CREATED,
+			UPDATED
+		FROM
+			hdYears_hdYear
+		WHERE
+			<if test="year != null and year != ''">
+				YEAR = #{year}
+			</if>
+	
+	</select>
+	
+	<select id="calendarHdSelect" resultType="map">
+		SELECT
+			HOLIDAY_ID,
+			NAME,
+			DATE_FORMAT(HOLIDAY_DATE,'%Y-%m-%d') AS HOLIDAY_DATE ,
+			HOLIDAY_TYPE,
+			CREATED,
+			UPDATED,
+			YEAR_ID
+		FROM
+			holidays_holiday
+		WHERE
+			1=1
+			<if test="yearId != null and yearId != ''">
+				,YEAR_ID = #{yearId}
+			</if>
+	
+	</select>
+	
+	
+	<select id="calendarSelect" resultType="map">
+		
+	
+	</select>
+	
+	<insert id="calendarHdYearInsert" parameterType="map">
+		<selectKey keyProperty="yearId" resultType="Long" order="BEFORE">
+			SELECT MAX(YEAR_ID)+1 FROM hdYears_hdYear AS yearId
+		</selectKey>
+		INSERT INTO hdYears_hdYear
+			(YEAR_ID,YEAR,CREATED)
+		VALUES
+			(#{yearId},#{year},#{created}) 
+	</insert>
+	
+	<insert id="calendarHdInsert" parameterType="map">
+		<selectKey keyProperty="holidayId" resultType="Long" order="BEFORE">
+			SELECT MAX(HOLIDAY_ID)+1 FROM holidays_holiday AS holidayId
+		</selectKey>
+		INSERT INTO holidays_holiday
+			(HOLIDAY_ID,NAME,HOLIDAY_DATE,HOLIDAY_TYPE,CREATED,YEAR_ID)
+		VALUES
+			(#{holidayId},#{name},STR_TO_DATE(#{date},'%Y-%m-%d'),#{type},#{created},#{yearId}) 
+	</insert>
+	
+	<insert id="calendarInsert" parameterType="map">
+	 	<selectKey keyProperty="calendarId" resultType="Long" order="BEFORE">
+			SELECT MAX(CALENDAR_ID)+1 FROM calendars_calendar AS calendarId
+		</selectKey>
+		INSERT INTO calendars_calendar
+			(CALENDAR_ID,TITLE,CONTENT,CALENDAR_TYPE,START_DT,END_DT,START_TIME,END_TIME,ALLDAY_YN,USER_ID,CREATED)
+		VALUES
+			(#{calendarId},#{title},#{content},#{type},STR_TO_DATE(#{startDt},'%Y-%m-%d),STR_TO_DATE(#{endDt},'%Y-%m-%d'),#{startTime},#{endTime},#{allDay},#{userId},#{created}) 
+	</insert>
+	
+	<insert id="calendarUserInsert" parameterType="map">
+	 	<selectKey keyProperty="sharedId" resultType="Long" order="BEFORE">
+			SELECT MAX(SHARED_ID)+1 FROM calendars_user AS sharedId
+		</selectKey>
+		INSERT INTO calendars_user
+			(SHARED_ID,USER_ID,SHARE_TYPE,CALENDAR_ID,CREATED)
+		VALUES
+			(#{sharedId},#{userId},#{shareType},#{calendarId},#{created}) 
+	</insert>
+	
+</mapper>
